@@ -16,11 +16,9 @@ public class TupleUtil {
 
 	private TupleUtil() {}
 	
-	
 	/**
 	 * 入力されたStreamの要素をTupleで結合したStreamを作る
-	 * 
-	 * 要素の数はもっとも少ないものに合わせられる
+	 * 新しいStreamの要素の数はもっとも少ないものに合わせられる
 	 * @param s1
 	 * @param s2
 	 * @return Tupleを要素とするStream
@@ -45,6 +43,15 @@ public class TupleUtil {
 		return StreamSupport.stream(Spliterators.spliteratorUnknownSize(i, c), false);
 	}
 	
+	
+	/**
+	 * 入力されたStreamの要素をTupleで結合したStreamを作る
+	 * 新しいStreamの要素の数はもっとも少ないものに合わせられる
+	 * @param s1
+	 * @param s2
+	 * @param s3
+	 * @return Tupleを要素とするStream
+	 */
 	public static <T1, T2, T3> Stream<Tuple3<T1,T2,T3>> zip(Stream<T1> s1, Stream<T2> s2, Stream<T3> s3) {
 		final Spliterator<T1> sp1 = s1.spliterator();
 		final Spliterator<T2> sp2 = s2.spliterator();
@@ -69,6 +76,16 @@ public class TupleUtil {
 		return StreamSupport.stream(Spliterators.spliteratorUnknownSize(i, c), false);
 	}
 	
+	
+	/**
+	 * 入力されたStreamの要素をTupleで結合したStreamを作る
+	 * 新しいStreamの要素の数はもっとも少ないものに合わせられる
+	 * @param s1
+	 * @param s2
+	 * @param s3
+	 * @param s4
+	 * @return Tupleを要素とするStream
+	 */
 	public static <T1, T2, T3, T4> Stream<Tuple4<T1,T2,T3,T4>> zip(Stream<T1> s1, Stream<T2> s2, Stream<T3> s3, Stream<T4> s4) {
 		final Spliterator<T1> sp1 = s1.spliterator();
 		final Spliterator<T2> sp2 = s2.spliterator();
@@ -98,6 +115,17 @@ public class TupleUtil {
 		return StreamSupport.stream(Spliterators.spliteratorUnknownSize(i, c), false);
 	}
 	
+	
+	/**
+	 * 入力されたStreamの要素をTupleで結合したStreamを作る
+	 * 新しいStreamの要素の数はもっとも少ないものに合わせられる
+	 * @param s1
+	 * @param s2
+	 * @param s3
+	 * @param s4
+	 * @param s5
+	 * @return Tupleを要素とするStream
+	 */
 	public static <T1, T2, T3, T4, T5> Stream<Tuple5<T1,T2,T3,T4,T5>> zip(Stream<T1> s1, Stream<T2> s2, Stream<T3> s3, Stream<T4> s4, Stream<T5> s5) {
 		final Spliterator<T1> sp1 = s1.spliterator();
 		final Spliterator<T2> sp2 = s2.spliterator();
@@ -130,22 +158,6 @@ public class TupleUtil {
 		}
 		
 		return StreamSupport.stream(Spliterators.spliteratorUnknownSize(i, c), false);
-	}
-	
-	public static <T1, T2> List<Tuple2<T1,T2>> zip(List<T1> l1, List<T2> l2) {
-		return zip(l1.stream(), l2.stream()).collect(Collectors.toList());
-	}
-	
-	public static <T1, T2, T3> List<Tuple3<T1,T2,T3>> zip(List<T1> l1, List<T2> l2, List<T3> l3) {
-		return zip(l1.stream(), l2.stream(), l3.stream()).collect(Collectors.toList());
-	}
-	
-	public static <T1, T2, T3, T4> List<Tuple4<T1,T2,T3,T4>> zip(List<T1> l1, List<T2> l2, List<T3> l3, List<T4> l4) {
-		return zip(l1.stream(), l2.stream(), l3.stream(), l4.stream()).collect(Collectors.toList());
-	}
-	
-	public static <T1, T2, T3, T4, T5> List<Tuple5<T1,T2,T3,T4,T5>> zip(List<T1> l1, List<T2> l2, List<T3> l3, List<T4> l4, List<T5> l5) {
-		return zip(l1.stream(), l2.stream(), l3.stream(), l4.stream(), l5.stream()).collect(Collectors.toList());
 	}
 	
 	private static int makeCharacteristics(int... c) {
