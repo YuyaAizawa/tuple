@@ -3,9 +3,13 @@ package com.lethe_river.tuple;
 import java.util.Arrays;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
+import java.util.Map.Entry;
 import java.util.Objects;
+import java.util.Set;
 import java.util.Spliterator;
 import java.util.Spliterators;
+import java.util.stream.Collector;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 import java.util.stream.StreamSupport;
@@ -13,7 +17,7 @@ import java.util.stream.StreamSupport;
 import static com.lethe_river.tuple.TupleTypeInference.*;
 
 public class TupleUtil {
-
+	
 	private TupleUtil() {}
 	
 	/**
@@ -164,7 +168,6 @@ public class TupleUtil {
 				Spliterators.iterator(sp5)
 				);
 		
-		
 		if((c & Spliterator.SIZED) != 0) {
 			long limit = Math.min(sp1.getExactSizeIfKnown(),
 								  sp2.getExactSizeIfKnown());
@@ -192,12 +195,39 @@ public class TupleUtil {
 		return s1.flatMap(v1 -> l2.stream().map(v2 -> newTuple(v1, v2)));
 	}
 	
+	/**
+	 * Tuple<T1, T2>をMap<T1, T2>に変換するためのCollectorを得る
+	 * @return Collector
+	 */
+	public static <T1, T2> Collector<Tuple2<T1, T2>, ?, java.util.Map<T1, T2>> toMap() {
+		return Collectors.toMap(t -> t.v1, t -> t.v2);
+	}
+	
+	/**
+	 * 指定したMapのkeyとvalueのペアを要素とするStreamを作る
+	 * @param map
+	 * @return keyとvalueのペアを要素とするStream
+	 */
+	public static <T1, T2> Stream<Tuple2<T1, T2>> fromMap(Map<T1, T2> map) {
+		final int MAP_CHARACTERISTICS =
+				  Spliterator.DISTINCT
+				| Spliterator.NONNULL
+				| Spliterator.SIZED;
+		
+		final Set<Entry<T1, T2>> entries = map.entrySet();
+		final Iterator<Tuple2<T1, T2>> iterator = new Entry2Tuple<>(entries.iterator());
+		
+		return StreamSupport.stream(Spliterators.spliterator(
+				iterator, entries.size(), MAP_CHARACTERISTICS), true);
+	}
+	
 	private static int zipCharacteristics(int... c) {
 		int dis = Arrays.stream(c).reduce((l, r) -> l | r).getAsInt();
 		int con = Arrays.stream(c).reduce((l, r) -> l & r).getAsInt();
 		return (Spliterator.CONCURRENT & (con))
 			 | (Spliterator.DISTINCT   & (dis))
 			 | (Spliterator.IMMUTABLE  & (con))
+			 | (Spliterator.SORTED     & (con))
 			 |  Spliterator.NONNULL
 			 | (Spliterator.ORDERED    & (con))
 			 | (Spliterator.SIZED      & (con));
@@ -310,6 +340,25 @@ public class TupleUtil {
 							i3.next(),
 							i4.next(),
 							i5.next());
+		}
+	}
+	
+	private static class Entry2Tuple<T1, T2> implements Iterator<Tuple2<T1, T2>> {
+		private final Iterator<Entry<T1, T2>> entries;
+		
+		public Entry2Tuple(Iterator<Entry<T1, T2>> iterator) {
+			entries = iterator;
+		}
+		
+		@Override
+		public boolean hasNext() {
+			return entries.hasNext();
+		}
+		
+		@Override
+		public Tuple2<T1, T2> next() {
+			Entry<T1, T2> entry = entries.next();
+			return new Tuple2<>(entry.getKey(), entry.getValue());
 		}
 	}
 }
