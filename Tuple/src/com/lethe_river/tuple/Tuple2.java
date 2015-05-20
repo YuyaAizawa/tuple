@@ -2,7 +2,7 @@ package com.lethe_river.tuple;
 
 // イミュータブルなタプルを表すクラス　あると何かと便利
 //  要素数固定とジェネリクスでコンパイル時の型チェックがきく
-public class Tuple2<T1,T2> {
+public final class Tuple2<T1,T2> {
 	public final T1 v1;
 	public final T2 v2;
 	

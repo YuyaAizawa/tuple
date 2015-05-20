@@ -1,6 +1,6 @@
 package com.lethe_river.tuple;
 
-public class Tuple4<T1,T2,T3,T4> {
+public final class Tuple4<T1,T2,T3,T4> {
 	public final T1 v1;
 	public final T2 v2;
 	public final T3 v3;
