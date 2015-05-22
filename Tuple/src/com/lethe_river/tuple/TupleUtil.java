@@ -14,8 +14,6 @@ import java.util.stream.Collectors;
 import java.util.stream.Stream;
 import java.util.stream.StreamSupport;
 
-import static com.lethe_river.tuple.TupleTypeInference.*;
-
 public class TupleUtil {
 	
 	private TupleUtil() {}
@@ -192,7 +190,7 @@ public class TupleUtil {
 	
 	public static <T1, T2> Stream<Tuple2<T1, T2>> product(Stream<T1> s1, Stream<T2> s2) {
 		List<T2> l2 = s2.collect(Collectors.toList());
-		return s1.flatMap(v1 -> l2.stream().map(v2 -> newTuple(v1, v2)));
+		return s1.flatMap(v1 -> l2.stream().map(v2 -> Tuple.of(v1, v2)));
 	}
 	
 	/**
@@ -250,7 +248,7 @@ public class TupleUtil {
 
 		@Override
 		public Tuple2<T1, T2> next() {
-			return newTuple(i1.next(),
+			return Tuple.of(i1.next(),
 							i2.next());
 		}
 	}
@@ -275,7 +273,7 @@ public class TupleUtil {
 
 		@Override
 		public Tuple3<T1, T2, T3> next() {
-			return newTuple(i1.next(),
+			return Tuple.of(i1.next(),
 							i2.next(),
 							i3.next());
 		}
@@ -305,7 +303,7 @@ public class TupleUtil {
 
 		@Override
 		public Tuple4<T1, T2, T3, T4> next() {
-			return newTuple(i1.next(), i2.next(), i3.next(), i4.next());
+			return Tuple.of(i1.next(), i2.next(), i3.next(), i4.next());
 		}
 	}
 	
@@ -335,7 +333,7 @@ public class TupleUtil {
 
 		@Override
 		public Tuple5<T1, T2, T3, T4, T5> next() {
-			return newTuple(i1.next(),
+			return Tuple.of(i1.next(),
 							i2.next(),
 							i3.next(),
 							i4.next(),
