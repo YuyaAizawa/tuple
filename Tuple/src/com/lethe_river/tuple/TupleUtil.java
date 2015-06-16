@@ -19,8 +19,8 @@ public class TupleUtil {
 	private TupleUtil() {}
 	
 	/**
-	 * 入力されたStreamの要素をTupleで結合したStreamを作る
-	 * 新しいStreamの要素の数はもっとも少ないものに合わせられる
+	 * 入力されたStreamの要素をTupleで結合したStreamを作る．
+	 * 新しいStreamの要素の数はもっとも少ないものに合わせられる．
 	 * @param s1
 	 * @param s2
 	 * @return 結合したTupleを要素とするStream
@@ -50,8 +50,8 @@ public class TupleUtil {
 	
 	
 	/**
-	 * 入力されたStreamの要素をTupleで結合したStreamを作る
-	 * 新しいStreamの要素の数はもっとも少ないものに合わせられる
+	 * 入力されたStreamの要素をTupleで結合したStreamを作る．
+	 * 新しいStreamの要素の数はもっとも少ないものに合わせられる．
 	 * @param s1
 	 * @param s2
 	 * @param s3
@@ -87,8 +87,8 @@ public class TupleUtil {
 	
 	
 	/**
-	 * 入力されたStreamの要素をTupleで結合したStreamを作る
-	 * 新しいStreamの要素の数はもっとも少ないものに合わせられる
+	 * 入力されたStreamの要素をTupleで結合したStreamを作る．
+	 * 新しいStreamの要素の数はもっとも少ないものに合わせられる．
 	 * @param s1
 	 * @param s2
 	 * @param s3
@@ -131,8 +131,8 @@ public class TupleUtil {
 	
 	
 	/**
-	 * 入力されたStreamの要素をTupleで結合したStreamを作る
-	 * 新しいStreamの要素の数はもっとも少ないものに合わせられる
+	 * 入力されたStreamの要素をTupleで結合したStreamを作る．
+	 * 新しいStreamの要素の数はもっとも少ないものに合わせられる．
 	 * @param s1
 	 * @param s2
 	 * @param s3
@@ -181,8 +181,8 @@ public class TupleUtil {
 	
 	
 	/**
-	 * 入力されたStreamの直積をTupleで結合したStreamを作る
-	 * Tuple内の各要素は入力されたStreamの要素の参照となる
+	 * 入力されたStreamの直積をTupleで結合したStreamを作る．
+	 * Tuple内の各要素は入力されたStreamの要素の参照となる．
 	 * @param s1
 	 * @param s2
 	 * @return 直積のTupleを要素とするStream
@@ -194,7 +194,7 @@ public class TupleUtil {
 	}
 	
 	/**
-	 * Tuple<T1, T2>をMap<T1, T2>に変換するためのCollectorを得る
+	 * Tuple<T1, T2>をMap<T1, T2>に変換するためのCollectorを得る．
 	 * @return Collector
 	 */
 	public static <T1, T2> Collector<Tuple2<T1, T2>, ?, java.util.Map<T1, T2>> toMap() {
@@ -202,7 +202,7 @@ public class TupleUtil {
 	}
 	
 	/**
-	 * 指定したMapのkeyとvalueのペアを要素とするStreamを作る
+	 * 指定したMapのkeyとvalueのペアを要素とするStreamを作る．
 	 * @param map
 	 * @return keyとvalueのペアを要素とするStream
 	 */
