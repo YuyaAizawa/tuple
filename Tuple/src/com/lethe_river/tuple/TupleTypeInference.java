@@ -6,7 +6,7 @@ public class TupleTypeInference {
 	private TupleTypeInference() {}
 	
 	/**
-	 * 指定された要素を持つTupleを返す
+	 * 指定された要素を持つTupleを返す．
 	 * 
 	 * @deprecated {@link com.lethe_river.tuple#of(V1 v1, V2 v2)} に置き換えられた
 	 * 
@@ -19,7 +19,7 @@ public class TupleTypeInference {
 	}
 	
 	/**
-	 * 指定された要素を持つTupleを返す
+	 * 指定された要素を持つTupleを返す．
 	 * 
 	 * @deprecated {@link com.lethe_river.tuple#of(V1 v1, V2 v2, V3 v3)} に置き換えられた
 	 * 
@@ -33,7 +33,7 @@ public class TupleTypeInference {
 	}
 	
 	/**
-	 * 指定された要素を持つTupleを返す
+	 * 指定された要素を持つTupleを返す．
 	 * 
 	 * @deprecated {@link com.lethe_river.tuple#of(V1 v1, V2 v2, V3 v3, V4 v4)} に置き換えられた
 	 * 
@@ -48,7 +48,7 @@ public class TupleTypeInference {
 	}
 	
 	/**
-	 * 指定された要素を持つTupleを返す
+	 * 指定された要素を持つTupleを返す．
 	 * 
 	 * @deprecated {@link com.lethe_river.tuple#of(V1 v1, V2 v2, V3 v3, V4 v4, V5 v5)} に置き換えられた
 	 * 

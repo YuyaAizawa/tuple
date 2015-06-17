@@ -4,7 +4,7 @@ public final class Tuple {
 	private Tuple() {}
 	
 	/**
-	 * 指定された要素を持つTupleを返す
+	 * 指定された要素を持つTupleを返す．
 	 * 
 	 * @param v1　新しいTupleの要素
 	 * @param v2　新しいTupleの要素
@@ -15,7 +15,7 @@ public final class Tuple {
 	}
 	
 	/**
-	 * 指定された要素を持つTupleを返す
+	 * 指定された要素を持つTupleを返す．
 	 * 
 	 * @param v1　新しいTupleの要素
 	 * @param v2　新しいTupleの要素
@@ -27,7 +27,7 @@ public final class Tuple {
 	}
 	
 	/**
-	 * 指定された要素を持つTupleを返す
+	 * 指定された要素を持つTupleを返す．
 	 * 
 	 * @param v1　新しいTupleの要素
 	 * @param v2　新しいTupleの要素
@@ -40,7 +40,7 @@ public final class Tuple {
 	}
 	
 	/**
-	 * 指定された要素を持つTupleを返す
+	 * 指定された要素を持つTupleを返す．
 	 * 
 	 * @param v1　新しいTupleの要素
 	 * @param v2　新しいTupleの要素
