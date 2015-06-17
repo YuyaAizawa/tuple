@@ -1,4 +1,4 @@
-package com.lethe_river.union;
+package com.lethe_river.algebra.union;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -12,11 +12,11 @@ import java.util.function.Function;
 import java.util.function.Supplier;
 import java.util.stream.Collector;
 
-import com.lethe_river.tuple.Tuple;
-import com.lethe_river.tuple.Tuple2;
-import com.lethe_river.tuple.Tuple3;
-import com.lethe_river.tuple.Tuple4;
-import com.lethe_river.tuple.Tuple5;
+import com.lethe_river.algebra.tuple.Tuple;
+import com.lethe_river.algebra.tuple.Tuple2;
+import com.lethe_river.algebra.tuple.Tuple3;
+import com.lethe_river.algebra.tuple.Tuple4;
+import com.lethe_river.algebra.tuple.Tuple5;
 
 public class UnionUtil {
 	private UnionUtil(){}

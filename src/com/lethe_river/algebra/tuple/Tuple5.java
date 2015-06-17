@@ -1,4 +1,4 @@
-package com.lethe_river.tuple;
+package com.lethe_river.algebra.tuple;
 
 public final class Tuple5<T1,T2,T3,T4,T5> {
 	public final T1 v1;

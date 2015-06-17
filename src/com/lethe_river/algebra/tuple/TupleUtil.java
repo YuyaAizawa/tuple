@@ -1,4 +1,4 @@
-package com.lethe_river.tuple;
+package com.lethe_river.algebra.tuple;
 
 import java.util.Arrays;
 import java.util.Iterator;

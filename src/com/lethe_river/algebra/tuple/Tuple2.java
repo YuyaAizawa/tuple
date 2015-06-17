@@ -1,4 +1,4 @@
-package com.lethe_river.tuple;
+package com.lethe_river.algebra.tuple;
 
 // イミュータブルなタプルを表すクラス　あると何かと便利
 //  要素数固定とジェネリクスでコンパイル時の型チェックがきく

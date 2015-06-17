@@ -1,4 +1,4 @@
-package com.lethe_river.union;
+package com.lethe_river.algebra.union;
 
 import java.util.Objects;
 import java.util.Optional;
