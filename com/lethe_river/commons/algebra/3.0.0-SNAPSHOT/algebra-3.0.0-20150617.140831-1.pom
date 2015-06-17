@@ -21,6 +21,7 @@
   </distributionManagement>
   
   <build>
+  	<sourceDirectory>src</sourceDirectory>
 	<plugins>
 		<plugin>
             <artifactId>maven-deploy-plugin</artifactId>
