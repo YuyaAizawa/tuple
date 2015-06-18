@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <metadata>
-  <groupId>com.lethe_river.commons</groupId>
+  <groupId>com.lethe_river</groupId>
   <artifactId>algebra</artifactId>
   <versioning>
     <versions>
       <version>3.0.0-SNAPSHOT</version>
     </versions>
-    <lastUpdated>20150617140831</lastUpdated>
+    <lastUpdated>20150618130627</lastUpdated>
   </versioning>
 </metadata>
