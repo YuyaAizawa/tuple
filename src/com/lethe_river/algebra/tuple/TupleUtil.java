@@ -9,6 +9,8 @@ import java.util.Objects;
 import java.util.Set;
 import java.util.Spliterator;
 import java.util.Spliterators;
+import java.util.function.BinaryOperator;
+import java.util.function.Supplier;
 import java.util.stream.Collector;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
@@ -197,8 +199,18 @@ public class TupleUtil {
 	 * Tuple<T1, T2>をMap<T1, T2>に変換するためのCollectorを得る．
 	 * @return Collector
 	 */
-	public static <T1, T2> Collector<Tuple2<T1, T2>, ?, java.util.Map<T1, T2>> toMap() {
+	public static <T1, T2> Collector<Tuple2<T1, T2>, ?, Map<T1, T2>> toMap() {
 		return Collectors.toMap(t -> t.v1, t -> t.v2);
+	}
+
+	public static <T1, T2> Collector<Tuple2<T1, T2>, ?, Map<T1, T2>> toMap(
+			BinaryOperator<T2> mergeFunction) {
+		return Collectors.toMap(t -> t.v1, t -> t.v2, mergeFunction);
+	}
+
+	public static <T1, T2, M extends Map<T1, T2>> Collector<Tuple2<T1, T2>, ?, M> toMap(
+			BinaryOperator<T2> mergeFunction, Supplier<M> mapSupplier) {
+		return Collectors.toMap(t -> t.v1, t -> t.v2, mergeFunction,mapSupplier);
 	}
 	
 	/**
