@@ -11,6 +11,7 @@ import java.util.Set;
 import java.util.Spliterator;
 import java.util.Spliterators;
 import java.util.function.BinaryOperator;
+import java.util.function.Consumer;
 import java.util.function.Supplier;
 import java.util.stream.Collector;
 import java.util.stream.Collectors;
@@ -245,21 +246,14 @@ public class TupleUtil {
 		if(stream.isParallel()) {
 			throw new IllegalArgumentException("stream must be sequencial");
 		}
-			
+		
 		Spliterator<T> spliterator = stream.spliterator();
-		int origCharacteristics = spliterator.characteristics();
 		
-		if((origCharacteristics & Spliterator.ORDERED) == 0) {
-			throw new IllegalArgumentException("stream must be orderd");
+		if(spliterator.estimateSize() < 2) {
+			spliterator = Spliterators.emptySpliterator();
 		}
-		
-		Iterator<T> original = Spliterators.iterator(spliterator);
-		
-		Iterator<Tuple2<T, T>> iterator = new Window2Iterator<T>(original);
-		
-		origCharacteristics &= ~Spliterator.CONCURRENT;
-		
-		return StreamSupport.stream(Spliterators.spliterator(iterator, spliterator.estimateSize(), origCharacteristics), false);
+			
+		return StreamSupport.stream(new Window2Spliterator<T>(spliterator), false);
 	}
 	
 	private static int zipCharacteristics(int... c) {
@@ -402,34 +396,79 @@ public class TupleUtil {
 			return new Tuple2<>(entry.getKey(), entry.getValue());
 		}
 	}
-
-	private static class Window2Iterator<T> implements Iterator<Tuple2<T, T>> {
+	
+	private static class Window2Spliterator<T> implements Spliterator<Tuple2<T, T>> {
+	
+		Spliterator<T> spliterator;
+		Iterator<T> iterator;
 		
-		private final Iterator<T> original;
-		private T previous;
+		T previous;
+		T last;
 		
-		public Window2Iterator(Iterator<T> original) {
-			this.original = original;
-			if(original.hasNext()) {
-				previous = original.next();
+		public Window2Spliterator(Spliterator<T> spliterator) {
+			this(checkOrderd(spliterator), null, null);
+		}
+		
+		private static <T> Spliterator<T> checkOrderd(Spliterator<T> spliterator) {
+			if((spliterator.characteristics() & Spliterator.ORDERED) == 0) {
+				throw new IllegalArgumentException("spliterator must be orderd");
 			}
+			return spliterator;
+		}
+
+		private Window2Spliterator(Spliterator<T> spliterator, T first, T last) {
+			this.spliterator = spliterator;
+			this.last = last;
+			this.previous = first;
 		}
 		
 		@Override
-		public boolean hasNext() {
-			return original.hasNext();
+		public boolean tryAdvance(Consumer<? super Tuple2<T, T>> action) {
+			Tuple2<T, T> tuple;
+			
+			if(iterator == null) {
+				iterator = Spliterators.iterator(spliterator);
+			}
+			
+			if(previous == null) {
+				previous = iterator.next();
+			}
+			
+			if(iterator.hasNext()) {
+				tuple = Tuple.of(previous, iterator.next());
+			} else {
+				tuple = Tuple.of(previous, last);
+				last = null;
+			}
+			previous = tuple.v2;
+			
+			action.accept(tuple);
+			
+			return iterator.hasNext() || last != null;
 		}
 	
 		@Override
-		public Tuple2<T, T> next() {
-			try {
-				Tuple2<T, T> retVal = Tuple.of(previous, original.next());
-				previous = retVal.v2;
-				return retVal;
-			} catch(NoSuchElementException e) {
-				throw new NoSuchElementException();
+		public Spliterator<Tuple2<T, T>> trySplit() {
+			Spliterator<T> prefix = spliterator.trySplit();
+			if(prefix == null) {
+				return null;
 			}
+			
+			iterator = Spliterators.iterator(spliterator);
+			T prefixPrevious = previous;
+			previous = iterator.next();
+			
+			return new Window2Spliterator<T>(prefix, prefixPrevious, previous);
 		}
-		
+	
+		@Override
+		public long estimateSize() {
+			return spliterator.estimateSize() - (last == null ? 1 : 0);
+		}
+	
+		@Override
+		public int characteristics() {
+			return spliterator.characteristics();
+		}
 	}
 }
