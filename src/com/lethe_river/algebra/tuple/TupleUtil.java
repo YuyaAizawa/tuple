@@ -5,11 +5,14 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
+import java.util.NoSuchElementException;
 import java.util.Objects;
 import java.util.Set;
 import java.util.Spliterator;
 import java.util.Spliterators;
+import java.util.function.Consumer;
 import java.util.stream.Collector;
+import java.util.stream.Collector.Characteristics;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 import java.util.stream.StreamSupport;
@@ -216,7 +219,37 @@ public class TupleUtil {
 		final Iterator<Tuple2<T1, T2>> iterator = new Entry2Tuple<>(entries.iterator());
 		
 		return StreamSupport.stream(Spliterators.spliterator(
-				iterator, entries.size(), MAP_CHARACTERISTICS), true);
+				iterator, entries.size(), MAP_CHARACTERISTICS), false);
+	}
+	
+	/**
+	 * 入力したStreamの前後2つの要素の組を操作するためのStreamを作る．
+	 * 例えば元のStreamの要素が['A', 'B', 'C', 'D']であるとき，作られるStreamの要素は[('A', 'B'), ('B', 'C'), ('C', 'D')]となる．
+	 * 入力したStreamは消費される．
+	 * @param stream
+	 * @return 前後2つの要素の組を要素とするStream
+	 */
+	public static <T> Stream<Tuple2<T, T>> window2(Stream<T> stream) {
+		Objects.nonNull(stream);
+		
+		if(stream.isParallel()) {
+			throw new IllegalArgumentException("stream must be sequencial");
+		}
+			
+		Spliterator<T> spliterator = stream.spliterator();
+		int origCharacteristics = spliterator.characteristics();
+		
+		if((origCharacteristics & Spliterator.ORDERED) == 0) {
+			throw new IllegalArgumentException("stream must be orderd");
+		}
+		
+		Iterator<T> original = Spliterators.iterator(spliterator);
+		
+		Iterator<Tuple2<T, T>> iterator = new Window2Iterator<T>(original);
+		
+		origCharacteristics &= ~Spliterator.CONCURRENT;
+		
+		return StreamSupport.stream(Spliterators.spliterator(iterator, spliterator.estimateSize(), origCharacteristics), false);
 	}
 	
 	private static int zipCharacteristics(int... c) {
@@ -230,7 +263,7 @@ public class TupleUtil {
 			 | (Spliterator.ORDERED    & (con))
 			 | (Spliterator.SIZED      & (con));
 	}
-
+	
 	private static class Tuple2Ziper<T1, T2> implements Iterator<Tuple2<T1, T2>> {
 		private final Iterator<T1> i1;
 		private final Iterator<T2> i2;
@@ -358,5 +391,35 @@ public class TupleUtil {
 			Entry<T1, T2> entry = entries.next();
 			return new Tuple2<>(entry.getKey(), entry.getValue());
 		}
+	}
+
+	private static class Window2Iterator<T> implements Iterator<Tuple2<T, T>> {
+		
+		private final Iterator<T> original;
+		private T previous;
+		
+		public Window2Iterator(Iterator<T> original) {
+			this.original = original;
+			if(original.hasNext()) {
+				previous = original.next();
+			}
+		}
+		
+		@Override
+		public boolean hasNext() {
+			return original.hasNext();
+		}
+	
+		@Override
+		public Tuple2<T, T> next() {
+			try {
+				Tuple2<T, T> retVal = Tuple.of(previous, original.next());
+				previous = retVal.v2;
+				return retVal;
+			} catch(NoSuchElementException e) {
+				throw new NoSuchElementException();
+			}
+		}
+		
 	}
 }
