@@ -23,7 +23,7 @@ public class TupleUtil {
 	private TupleUtil() {}
 	
 	/**
-	 * 入力されたStreamの要素をTupleで結合したStreamを作る．
+	 * 入力されたStreamの同じ位置にある要素をTupleで結合したStreamを作る．
 	 * 新しいStreamの要素の数はもっとも少ないものに合わせられる．
 	 * @param s1
 	 * @param s2
@@ -52,9 +52,20 @@ public class TupleUtil {
 		return StreamSupport.stream(Spliterators.spliteratorUnknownSize(i, c), false);
 	}
 	
+	/**
+	 * 入力されたListの同じ位置にある要素をTupleで結合したStreamを作る．
+	 * 新しいStreamの要素の数はもっとも少ないものに合わせられる．
+	 * @param l1
+	 * @param l2
+	 * @return 結合したTupleを要素とするStream
+	 */
+	public static <T1, T2> Stream<Tuple2<T1, T2>>
+	zip(List<T1> l1, List<T2> l2) {
+		return zip(l1.stream(), l2.stream());
+	}
 	
 	/**
-	 * 入力されたStreamの要素をTupleで結合したStreamを作る．
+	 * 入力されたStreamの同じ位置にある要素をTupleで結合したStreamを作る．
 	 * 新しいStreamの要素の数はもっとも少ないものに合わせられる．
 	 * @param s1
 	 * @param s2
@@ -89,9 +100,22 @@ public class TupleUtil {
 		return StreamSupport.stream(Spliterators.spliteratorUnknownSize(i, c), false);
 	}
 	
+	/**
+	 * 入力されたListの同じ位置にある要素をTupleで結合したStreamを作る．
+	 * 新しいStreamの要素の数はもっとも少ないものに合わせられる．
+	 * @param l1
+	 * @param l2
+	 * @param l3
+	 * @return 結合したTupleを要素とするStream
+	 */
+	public static <T1, T2, T3> Stream<Tuple3<T1, T2, T3>>
+	zip(List<T1> l1, List<T2> l2, List<T3> l3) {
+		return zip(l1.stream(), l2.stream(), l3.stream());
+	}
+	
 	
 	/**
-	 * 入力されたStreamの要素をTupleで結合したStreamを作る．
+	 * 入力されたStreamの同じ位置にある要素をTupleで結合したStreamを作る．
 	 * 新しいStreamの要素の数はもっとも少ないものに合わせられる．
 	 * @param s1
 	 * @param s2
@@ -133,9 +157,23 @@ public class TupleUtil {
 		return StreamSupport.stream(Spliterators.spliteratorUnknownSize(i, c), false);
 	}
 	
+	/**
+	 * 入力されたListの同じ位置にある要素をTupleで結合したStreamを作る．
+	 * 新しいStreamの要素の数はもっとも少ないものに合わせられる．
+	 * @param l1
+	 * @param l2
+	 * @param l3
+	 * @param l4
+	 * @return 結合したTupleを要素とするStream
+	 */
+	public static <T1, T2, T3, T4> Stream<Tuple4<T1, T2, T3, T4>>
+	zip(List<T1> l1, List<T2> l2, List<T3> l3, List<T4> l4) {
+		return zip(l1.stream(), l2.stream(), l3.stream(), l4.stream());
+	}
+	
 	
 	/**
-	 * 入力されたStreamの要素をTupleで結合したStreamを作る．
+	 * 入力されたStreamの同じ位置にある要素をTupleで結合したStreamを作る．
 	 * 新しいStreamの要素の数はもっとも少ないものに合わせられる．
 	 * @param s1
 	 * @param s2
@@ -183,6 +221,20 @@ public class TupleUtil {
 		return StreamSupport.stream(Spliterators.spliteratorUnknownSize(i, c), false);
 	}
 	
+	/**
+	 * 入力されたListの同じ位置にある要素をTupleで結合したStreamを作る．
+	 * 新しいStreamの要素の数はもっとも少ないものに合わせられる．
+	 * @param l1
+	 * @param l2
+	 * @param l3
+	 * @param l4
+	 * @param l5
+	 * @return 結合したTupleを要素とするStream
+	 */
+	public static <T1, T2, T3, T4, T5> Stream<Tuple5<T1, T2, T3, T4, T5>>
+	zip(List<T1> l1, List<T2> l2, List<T3> l3, List<T4> l4, List<T5> l5) {
+		return zip(l1.stream(), l2.stream(), l3.stream(), l4.stream(), l5.stream());
+	}
 	
 	/**
 	 * 入力されたStreamの直積をTupleで結合したStreamを作る．
@@ -195,6 +247,18 @@ public class TupleUtil {
 	public static <T1, T2> Stream<Tuple2<T1, T2>> product(Stream<T1> s1, Stream<T2> s2) {
 		List<T2> l2 = s2.collect(Collectors.toList());
 		return s1.flatMap(v1 -> l2.stream().map(v2 -> Tuple.of(v1, v2)));
+	}
+	
+	/**
+	 * 入力されたListの直積をTupleで結合したStreamを作る．
+	 * Tuple内の各要素は入力されたStreamの要素の参照となる．
+	 * @param l1
+	 * @param l2
+	 * @return 直積のTupleを要素とするStream
+	 */
+	
+	public static <T1, T2> Stream<Tuple2<T1, T2>> product(List<T1> l1, List<T2> l2) {
+		return product(l1.stream(), l2.stream());
 	}
 	
 	/**
