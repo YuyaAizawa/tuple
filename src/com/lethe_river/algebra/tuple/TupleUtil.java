@@ -1,11 +1,12 @@
 package com.lethe_river.algebra.tuple;
 
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collection;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
-import java.util.NoSuchElementException;
 import java.util.Objects;
 import java.util.Set;
 import java.util.Spliterator;
@@ -18,7 +19,7 @@ import java.util.stream.Collectors;
 import java.util.stream.Stream;
 import java.util.stream.StreamSupport;
 
-public class TupleUtil {
+public final class TupleUtil {
 	
 	private TupleUtil() {}
 	
@@ -245,6 +246,8 @@ public class TupleUtil {
 	 */
 	
 	public static <T1, T2> Stream<Tuple2<T1, T2>> product(Stream<T1> s1, Stream<T2> s2) {
+		Objects.requireNonNull(s1);
+		Objects.requireNonNull(s2);
 		List<T2> l2 = s2.collect(Collectors.toList());
 		return s1.flatMap(v1 -> l2.stream().map(v2 -> Tuple.of(v1, v2)));
 	}
@@ -257,8 +260,16 @@ public class TupleUtil {
 	 * @return 直積のTupleを要素とするStream
 	 */
 	
-	public static <T1, T2> Stream<Tuple2<T1, T2>> product(List<T1> l1, List<T2> l2) {
-		return product(l1.stream(), l2.stream());
+	public static <T1, T2> Stream<Tuple2<T1, T2>> product(Collection<T1> l1, Collection<T2> l2) {
+		return l1.size() < l2.size()
+				? product(l1, l2.stream())
+				: product(l1.stream(), l2);
+	}
+	private static <T1, T2> Stream<Tuple2<T1, T2>> product(Collection<T1> s1, Stream<T2> s2) {
+		return s2.flatMap(v2 -> s1.stream().map(v1 -> Tuple.of(v1, v2)));
+	}
+	private static <T1, T2> Stream<Tuple2<T1, T2>> product(Stream<T1> s1, Collection<T2> s2) {
+		return s1.flatMap(v1 -> s2.stream().map(v2 -> Tuple.of(v1, v2)));
 	}
 	
 	/**
@@ -268,15 +279,29 @@ public class TupleUtil {
 	public static <T1, T2> Collector<Tuple2<T1, T2>, ?, Map<T1, T2>> toMap() {
 		return Collectors.toMap(t -> t.v1, t -> t.v2);
 	}
-
+	
+	/**
+	 * Tuple<T1, T2>をMap<T1, T2>に変換するためのCollectorを得る．
+	 * @param mergeFunction 同じキーに関連付けられた値同士の衝突の解決に使用されるマージ関数({@link Map#merge(Object, Object, java.util.function.BiFunction)}に渡される)
+	 * @return Collector
+	 */
 	public static <T1, T2> Collector<Tuple2<T1, T2>, ?, Map<T1, T2>> toMap(
 			BinaryOperator<T2> mergeFunction) {
+		Objects.requireNonNull(mergeFunction);
 		return Collectors.toMap(t -> t.v1, t -> t.v2, mergeFunction);
 	}
 
+	/**
+	 * Tuple<T1, T2>をMap<T1, T2>に変換するためのCollectorを得る．
+	 * @param mergeFunction 同じキーに関連付けられた値同士の衝突の解決に使用されるマージ関数({@link Map#merge(Object, Object, java.util.function.BiFunction)}に渡される)
+	 * @param mapSupplier 結果の挿入先となる新しい空のMapを返す関数
+	 * @return Collector
+	 */
 	public static <T1, T2, M extends Map<T1, T2>> Collector<Tuple2<T1, T2>, ?, M> toMap(
 			BinaryOperator<T2> mergeFunction, Supplier<M> mapSupplier) {
-		return Collectors.toMap(t -> t.v1, t -> t.v2, mergeFunction,mapSupplier);
+		Objects.requireNonNull(mergeFunction);
+		Objects.requireNonNull(mapSupplier);
+		return Collectors.toMap(t -> t.v1, t -> t.v2, mergeFunction, mapSupplier);
 	}
 	
 	/**
@@ -299,13 +324,14 @@ public class TupleUtil {
 	
 	/**
 	 * 入力したStreamの前後2つの要素の組を操作するためのStreamを作る．
-	 * 例えば元のStreamの要素が['A', 'B', 'C', 'D']であるとき，作られるStreamの要素は[('A', 'B'), ('B', 'C'), ('C', 'D')]となる．
+	 * 例えば元のStreamの要素が['A', 'B', 'C', 'D']であるとき，作られるStreamの要素は
+	 * [('A', 'B'), ('B', 'C'), ('C', 'D')]となる．
 	 * 入力したStreamは消費される．
 	 * @param stream
 	 * @return 前後2つの要素の組を要素とするStream
 	 */
 	public static <T> Stream<Tuple2<T, T>> window2(Stream<T> stream) {
-		Objects.nonNull(stream);
+		Objects.requireNonNull(stream);
 		
 		if(stream.isParallel()) {
 			throw new IllegalArgumentException("stream must be sequencial");
@@ -319,6 +345,106 @@ public class TupleUtil {
 			
 		return StreamSupport.stream(new Window2Spliterator<T>(spliterator), false);
 	}
+	
+	/**
+	 * 要素ごとのListに変換するCollectorを得る.
+	 * @return Collector
+	 */
+	public static <T1, T2> Collector<Tuple2<T1, T2>, ?,
+			Tuple2<List<T1>, List<T2>>> toList2() {
+		return Collector.of(
+				() -> Tuple.of(
+						new ArrayList<>(10),
+						new ArrayList<>(10)),
+				(l, t) -> {
+					l.v1.add(t.v1);
+					l.v2.add(t.v2);},
+				(l1, l2) -> {
+					l1.v1.addAll(l2.v1);
+					l1.v2.addAll(l2.v2);
+					return l1;}
+				);
+	}
+	
+	/**
+	 * 要素ごとのListに変換するCollectorを得る.
+	 * @return Collector
+	 */
+	public static <T1, T2, T3> Collector<Tuple3<T1, T2, T3>, ?,
+			Tuple3<List<T1>, List<T2>, List<T3>>> toList3() {
+		return Collector.of(
+				() -> Tuple.of(
+						new ArrayList<>(10),
+						new ArrayList<>(10),
+						new ArrayList<>(10)),
+				(l, t) -> {
+					l.v1.add(t.v1);
+					l.v2.add(t.v2);
+					l.v3.add(t.v3);},
+				(l1, l2) -> {
+					l1.v1.addAll(l2.v1);
+					l1.v2.addAll(l2.v2);
+					l1.v3.addAll(l2.v3);
+					return l1;}
+				);
+	}
+	
+	/**
+	 * 要素ごとのListに変換するCollectorを得る.
+	 * @return Collector
+	 */
+	public static <T1, T2, T3, T4> Collector<Tuple4<T1, T2, T3, T4>, ?,
+			Tuple4<List<T1>, List<T2>, List<T3>, List<T4>>> toList4() {
+		return Collector.of(
+				() -> Tuple.of(
+						new ArrayList<>(10),
+						new ArrayList<>(10),
+						new ArrayList<>(10),
+						new ArrayList<>(10)),
+				(l, t) -> {
+					l.v1.add(t.v1);
+					l.v2.add(t.v2);
+					l.v3.add(t.v3);
+					l.v4.add(t.v4);},
+				(l1, l2) -> {
+					l1.v1.addAll(l2.v1);
+					l1.v2.addAll(l2.v2);
+					l1.v3.addAll(l2.v3);
+					l1.v4.addAll(l2.v4);
+					return l1;}
+				);
+	}
+	
+	/**
+	 * 要素ごとのListに変換するCollectorを得る.
+	 * @return Collector
+	 */
+	public static <T1, T2, T3, T4, T5> Collector<Tuple5<T1, T2, T3, T4, T5>, ?,
+			Tuple5<List<T1>, List<T2>, List<T3>, List<T4>, List<T5>>> toList5() {
+		return Collector.of(
+				() -> Tuple.of(
+						new ArrayList<>(10),
+						new ArrayList<>(10),
+						new ArrayList<>(10),
+						new ArrayList<>(10),
+						new ArrayList<>(10)),
+				(l, t) -> {
+					l.v1.add(t.v1);
+					l.v2.add(t.v2);
+					l.v3.add(t.v3);
+					l.v4.add(t.v4);
+					l.v5.add(t.v5);},
+				(l1, l2) -> {
+					l1.v1.addAll(l2.v1);
+					l1.v2.addAll(l2.v2);
+					l1.v3.addAll(l2.v3);
+					l1.v4.addAll(l2.v4);
+					l1.v5.addAll(l2.v5);
+					return l1;}
+				);
+	}
+	
+	// TODO 他の個数も
 	
 	private static int zipCharacteristics(int... c) {
 		int dis = Arrays.stream(c).reduce((l, r) -> l | r).getAsInt();
@@ -536,3 +662,4 @@ public class TupleUtil {
 		}
 	}
 }
+
