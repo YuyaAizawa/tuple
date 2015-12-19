@@ -273,7 +273,7 @@ public final class TupleUtil {
 	}
 	
 	/**
-	 * Tuple<T1, T2>をMap<T1, T2>に変換するためのCollectorを得る．
+	 * Tuple2&lt;T1, T2&gt;をMap&lt;T1, T2&gt;に変換するためのCollectorを得る．
 	 * @return Collector
 	 */
 	public static <T1, T2> Collector<Tuple2<T1, T2>, ?, Map<T1, T2>> toMap() {
@@ -281,8 +281,9 @@ public final class TupleUtil {
 	}
 	
 	/**
-	 * Tuple<T1, T2>をMap<T1, T2>に変換するためのCollectorを得る．
-	 * @param mergeFunction 同じキーに関連付けられた値同士の衝突の解決に使用されるマージ関数({@link Map#merge(Object, Object, java.util.function.BiFunction)}に渡される)
+	 * Tuple2&lt;T1, T2&gt;をMap&lt;T1, T2&gt;に変換するためのCollectorを得る．
+	 * @param mergeFunction 同じキーに関連付けられた値同士の衝突の解決に使用されるマージ関数
+	 * ({@link Map#merge(Object, Object, java.util.function.BiFunction) Map#merge(T1, T2, BiFunction)}に渡される)
 	 * @return Collector
 	 */
 	public static <T1, T2> Collector<Tuple2<T1, T2>, ?, Map<T1, T2>> toMap(
@@ -292,8 +293,9 @@ public final class TupleUtil {
 	}
 
 	/**
-	 * Tuple<T1, T2>をMap<T1, T2>に変換するためのCollectorを得る．
-	 * @param mergeFunction 同じキーに関連付けられた値同士の衝突の解決に使用されるマージ関数({@link Map#merge(Object, Object, java.util.function.BiFunction)}に渡される)
+	 * Tuple2&lt;T1, T2&gt;をMap&lt;T1, T2&gt;に変換するためのCollectorを得る．
+	 * @param mergeFunction 同じキーに関連付けられた値同士の衝突の解決に使用されるマージ関数
+	 * ({@link Map#merge(Object, Object, java.util.function.BiFunction) Map#merge(T1, T2, BiFunction)}に渡される)
 	 * @param mapSupplier 結果の挿入先となる新しい空のMapを返す関数
 	 * @return Collector
 	 */
