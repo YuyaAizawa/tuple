@@ -15,29 +15,49 @@ public final class Union5<T1, T2, T3, T4, T5> {
 	
 	private final Member<T1, T2, T3, T4, T5> member;
 	
-	public static <T1, T2, T3, T4, T5> Union5<T1, T2, T3, T4, T5> _1(T1 value) {
+	public static <T1, T2, T3, T4, T5> Union5<T1, T2, T3, T4, T5> of1(T1 value) {
 		Objects.nonNull(value);
 		return new Union5<T1, T2, T3, T4, T5>(new Member1<>(value));
 	}
+	@Deprecated
+	public static <T1, T2, T3, T4, T5> Union5<T1, T2, T3, T4, T5> _1(T1 value) {
+		return of1(value);
+	}
 	
-	public static <T1, T2, T3, T4, T5> Union5<T1, T2, T3, T4, T5> _2(T2 value) {
+	public static <T1, T2, T3, T4, T5> Union5<T1, T2, T3, T4, T5> of2(T2 value) {
 		Objects.nonNull(value);
 		return new Union5<T1, T2, T3, T4, T5>(new Member2<>(value));
 	}
+	@Deprecated
+	public static <T1, T2, T3, T4, T5> Union5<T1, T2, T3, T4, T5> _2(T2 value) {
+		return of2(value);
+	}
 	
-	public static <T1, T2, T3, T4, T5> Union5<T1, T2, T3, T4, T5> _3(T3 value) {
+	public static <T1, T2, T3, T4, T5> Union5<T1, T2, T3, T4, T5> of3(T3 value) {
 		Objects.nonNull(value);
 		return new Union5<T1, T2, T3, T4, T5>(new Member3<>(value));
 	}
+	@Deprecated
+	public static <T1, T2, T3, T4, T5> Union5<T1, T2, T3, T4, T5> _3(T3 value) {
+		return of3(value);
+	}
 	
-	public static <T1, T2, T3, T4, T5> Union5<T1, T2, T3, T4, T5> _4(T4 value) {
+	public static <T1, T2, T3, T4, T5> Union5<T1, T2, T3, T4, T5> of4(T4 value) {
 		Objects.nonNull(value);
 		return new Union5<T1, T2, T3, T4, T5>(new Member4<>(value));
 	}
+	@Deprecated
+	public static <T1, T2, T3, T4, T5> Union5<T1, T2, T3, T4, T5> _4(T4 value) {
+		return of4(value);
+	}
 	
-	public static <T1, T2, T3, T4, T5> Union5<T1, T2, T3, T4, T5> _5(T5 value) {
+	public static <T1, T2, T3, T4, T5> Union5<T1, T2, T3, T4, T5> of5(T5 value) {
 		Objects.nonNull(value);
 		return new Union5<T1, T2, T3, T4, T5>(new Member5<>(value));
+	}
+	@Deprecated
+	public static <T1, T2, T3, T4, T5> Union5<T1, T2, T3, T4, T5> _5(T5 value) {
+		return of5(value);
 	}
 	
 	public <R> R match(Function<T1, R> f1, Function<T2, R> f2, Function<T3, R> f3, Function<T4, R> f4, Function<T5, R> f5) {

@@ -33,9 +33,22 @@ public final class Union2<T1, T2> {
 	 * @return 新しいUnion2
 	 * @exception NullPointerException valueがnullの場合
 	 */
-	public static <T1, T2> Union2<T1, T2> _1(T1 value) {
+	public static <T1, T2> Union2<T1, T2> of1(T1 value) {
 		Objects.nonNull(value);
 		return new Union2<T1, T2>(new Member1<>(value));
+	}
+	
+	/**
+	 * 指定されたT1型の要素を持つ新しいUnion2を返す．
+	 * 
+	 * @deprecated {@link Union2#of1(Object) Union2#of1(T1)}に置き換えられた
+	 * 
+	 * @param value
+	 * @return 新しいUnion2
+	 * @exception NullPointerException valueがnullの場合
+	 */
+	public static <T1, T2> Union2<T1, T2> _1(T1 value) {
+		return of1(value);
 	}
 	
 	/**
@@ -45,9 +58,22 @@ public final class Union2<T1, T2> {
 	 * @return 新しいUnion2
 	 * @exception NullPointerException valueがnullの場合
 	 */
-	public static <T1, T2> Union2<T1, T2> _2(T2 value) {
+	public static <T1, T2> Union2<T1, T2> of2(T2 value) {
 		Objects.nonNull(value);
 		return new Union2<T1, T2>(new Member2<>(value));
+	}
+	
+	/**
+	 * 指定されたT2型の要素を持つ新しいUnion2を返す．
+	 * 
+	 * @deprecated {@link Union2#of2(Object) Union2#of2(T2)}に置き換えられた
+	 * 
+	 * @param value
+	 * @return 新しいUnion2
+	 * @exception NullPointerException valueがnullの場合
+	 */
+	public static <T1, T2> Union2<T1, T2> _2(T2 value) {
+		return of2(value);
 	}
 	
 	/**

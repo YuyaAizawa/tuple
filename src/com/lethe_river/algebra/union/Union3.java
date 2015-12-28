@@ -15,19 +15,31 @@ public final class Union3<T1, T2, T3> {
 	
 	private final Member<T1, T2, T3> member;
 	
-	public static <T1, T2, T3> Union3<T1, T2, T3> _1(T1 value) {
+	public static <T1, T2, T3> Union3<T1, T2, T3> of1(T1 value) {
 		Objects.nonNull(value);
 		return new Union3<T1, T2, T3>(new Member1<>(value));
 	}
+	@Deprecated
+	public static <T1, T2, T3> Union3<T1, T2, T3> _1(T1 value) {
+		return of1(value);
+	}
 	
-	public static <T1, T2, T3> Union3<T1, T2, T3> _2(T2 value) {
+	public static <T1, T2, T3> Union3<T1, T2, T3> of2(T2 value) {
 		Objects.nonNull(value);
 		return new Union3<T1, T2, T3>(new Member2<>(value));
 	}
+	@Deprecated
+	public static <T1, T2, T3> Union3<T1, T2, T3> _2(T2 value) {
+		return of2(value);
+	}
 	
-	public static <T1, T2, T3> Union3<T1, T2, T3> _3(T3 value) {
+	public static <T1, T2, T3> Union3<T1, T2, T3> of3(T3 value) {
 		Objects.nonNull(value);
 		return new Union3<T1, T2, T3>(new Member3<>(value));
+	}
+	@Deprecated
+	public static <T1, T2, T3> Union3<T1, T2, T3> _3(T3 value) {
+		return of3(value);
 	}
 	
 	public <R> R match(Function<T1, R> f1, Function<T2, R> f2, Function<T3, R> f3) {
