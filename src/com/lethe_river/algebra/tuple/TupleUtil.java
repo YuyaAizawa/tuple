@@ -346,7 +346,8 @@ public final class TupleUtil {
 		}
 			
 		return StreamSupport.stream(new Window2Spliterator<T>(spliterator), false);
-	}
+	}// TODO 他の個数も
+	
 	
 	/**
 	 * 要素ごとのListに変換するCollectorを得る.
@@ -445,8 +446,6 @@ public final class TupleUtil {
 					return l1;}
 				);
 	}
-	
-	// TODO 他の個数も
 	
 	private static int zipCharacteristics(int... c) {
 		int dis = Arrays.stream(c).reduce((l, r) -> l | r).getAsInt();
