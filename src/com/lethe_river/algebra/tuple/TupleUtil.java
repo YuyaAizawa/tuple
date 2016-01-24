@@ -16,6 +16,7 @@ import java.util.function.Consumer;
 import java.util.function.Supplier;
 import java.util.stream.Collector;
 import java.util.stream.Collectors;
+import java.util.stream.IntStream;
 import java.util.stream.Stream;
 import java.util.stream.StreamSupport;
 
@@ -253,7 +254,7 @@ public final class TupleUtil {
 	}
 	
 	/**
-	 * 入力されたListの直積をTupleで結合したStreamを作る．
+	 * 入力されたCollectionの直積をTupleで結合したStreamを作る．
 	 * Tuple内の各要素は入力されたStreamの要素の参照となる．
 	 * @param l1
 	 * @param l2
@@ -270,6 +271,26 @@ public final class TupleUtil {
 	}
 	private static <T1, T2> Stream<Tuple2<T1, T2>> product(Stream<T1> s1, Collection<T2> s2) {
 		return s1.flatMap(v1 -> s2.stream().map(v2 -> Tuple.of(v1, v2)));
+	}
+	
+	/**
+	 * 入力されたCollectionの要素と指定した初期値から増加するインデックスの組のStreamを作る.
+	 * 例えば，List["A", "B", "C"]と初期値2を入力としたとき，作られるStreamの要素は[("A", 2), ("B", 3), ("C", 4)]である.
+	 * @param collection
+	 * @param start 添え字の初期値
+	 * @return Collectionの要素とインデックスを要素とするStream
+	 */
+	public static <E> Stream<Tuple2<Integer, E>> streamWithIndex(Collection<E> collection, int start) {
+		return zip(IntStream.iterate(start, i -> i+1).boxed(), collection.stream());
+	}
+	/**
+	 * 入力されたCollectionの要素と0から増加するインデックスの組のStreamを作る.
+	 * 例えば，List["A", "B", "C"]を入力としたとき，作られるStreamの要素は[("A", 0), ("B", 1), ("C", 2)]である.
+	 * @param collection
+	 * @return Collectionの要素とインデックスを要素とするStream
+	 */
+	public static <E> Stream<Tuple2<Integer, E>> streamWithIndex(Collection<E> collection) {
+		return streamWithIndex(collection, 0);
 	}
 	
 	/**
