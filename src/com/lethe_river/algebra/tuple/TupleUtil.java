@@ -280,8 +280,8 @@ public final class TupleUtil {
 	 * @param start 添え字の初期値
 	 * @return Collectionの要素とインデックスを要素とするStream
 	 */
-	public static <E> Stream<Tuple2<Integer, E>> streamWithIndex(Collection<E> collection, int start) {
-		return zip(IntStream.iterate(start, i -> i+1).boxed(), collection.stream());
+	public static <E> Stream<Tuple2<E, Integer>> streamWithIndex(Collection<E> collection, int start) {
+		return zip(collection.stream(), IntStream.iterate(start, i -> i+1).boxed());
 	}
 	/**
 	 * 入力されたCollectionの要素と0から増加するインデックスの組のStreamを作る.
@@ -289,7 +289,7 @@ public final class TupleUtil {
 	 * @param collection
 	 * @return Collectionの要素とインデックスを要素とするStream
 	 */
-	public static <E> Stream<Tuple2<Integer, E>> streamWithIndex(Collection<E> collection) {
+	public static <E> Stream<Tuple2<E, Integer>> streamWithIndex(Collection<E> collection) {
 		return streamWithIndex(collection, 0);
 	}
 	
