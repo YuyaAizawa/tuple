@@ -47,7 +47,7 @@ public final class Union3<T1, T2, T3> {
 	}
 	
 	public void match(Consumer<T1> f1, Consumer<T2> f2, Consumer<T3> f3) {
-		match(f1, f2, f3);
+		member.match(f1, f2, f3);
 	}
 	
 	public Optional<T1> get1() {
@@ -60,6 +60,11 @@ public final class Union3<T1, T2, T3> {
 	
 	public Optional<T3> get3() {
 		return Optional.ofNullable(match(t1 -> null, t2 -> null, t3 -> t3));
+	}
+	
+	@Override
+	public int hashCode() {
+		return member.getValue().hashCode();
 	}
 	
 	@Override
@@ -96,7 +101,7 @@ public final class Union3<T1, T2, T3> {
 		
 		@Override
 		public void match(Consumer<T1> f1, Consumer<T2> f2, Consumer<T3> f3) {
-			match(f1, f2, f3);
+			f1.accept(value);
 		}
 		
 		@Override
@@ -120,7 +125,7 @@ public final class Union3<T1, T2, T3> {
 		
 		@Override
 		public void match(Consumer<T1> f1, Consumer<T2> f2, Consumer<T3> f3) {
-			match(f1, f2, f3);
+			f2.accept(value);
 		}
 		
 		@Override
@@ -144,7 +149,7 @@ public final class Union3<T1, T2, T3> {
 		
 		@Override
 		public void match(Consumer<T1> f1, Consumer<T2> f2, Consumer<T3> f3) {
-			match(f1, f2, f3);
+			f3.accept(value);
 		}
 		
 		@Override
