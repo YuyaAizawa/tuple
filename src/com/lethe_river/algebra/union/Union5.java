@@ -89,6 +89,11 @@ public final class Union5<T1, T2, T3, T4, T5> {
 	}
 	
 	@Override
+	public String toString() {
+		return match(T1::toString, T2::toString, T3::toString, T4::toString, T5::toString);
+	}
+	
+	@Override
 	public int hashCode() {
 		return member.getValue().hashCode();
 	}

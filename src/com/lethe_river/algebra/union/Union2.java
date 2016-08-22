@@ -121,6 +121,16 @@ public final class Union2<T1, T2> {
 	}
 	
 	/**
+	 * 要素の文字列表現を返す.
+	 * 
+	 * @return 要素の文字列表現
+	 */
+	@Override
+	public String toString() {
+		return match(T1::toString, T2::toString);
+	}
+	
+	/**
 	 * 要素に基づくハッシュを返す．
 	 * 
 	 * @return 要素に基づくハッシュ

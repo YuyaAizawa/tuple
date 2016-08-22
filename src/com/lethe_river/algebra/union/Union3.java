@@ -63,6 +63,11 @@ public final class Union3<T1, T2, T3> {
 	}
 	
 	@Override
+	public String toString() {
+		return match(T1::toString, T2::toString, T3::toString);
+	}
+	
+	@Override
 	public int hashCode() {
 		return member.getValue().hashCode();
 	}

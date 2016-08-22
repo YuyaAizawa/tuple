@@ -350,6 +350,8 @@ public final class TupleUtil {
 	 * 例えば元のStreamの要素が['A', 'B', 'C', 'D']であるとき，作られるStreamの要素は
 	 * [('A', 'B'), ('B', 'C'), ('C', 'D')]となる．
 	 * 入力したStreamは消費される．
+	 * 
+	 * @deprecated {@link TupleUtil#window2(List) TupleUtil#window2(List&lt;T&gt;)}に置き換えられた
 	 * @param stream
 	 * @return 前後2つの要素の組を要素とするStream
 	 */
@@ -367,8 +369,83 @@ public final class TupleUtil {
 		}
 			
 		return StreamSupport.stream(new Window2Spliterator<T>(spliterator), false);
-	}// TODO 他の個数も
+	}
 	
+	/**
+	 * 入力したListから前後2つの要素の組を操作するためのStreamを作る．
+	 * 例えば元のListが['A', 'B', 'C', 'D']であるとき，作られるStreamの要素は
+	 * [('A', 'B'), ('B', 'C'), ('C', 'D')]となる．
+	 * @param list
+	 * @return 前後2つの要素の組を要素とするStream
+	 */
+	public static <T> Stream<Tuple2<T, T>> window2(List<T> list) {
+		Objects.requireNonNull(list);
+		
+		if(list.size() < 2) {
+			return Stream.empty();
+		}
+		return zip(list, list.subList(1, list.size()));
+	}
+	
+	/**
+	 * 入力したListから前後3つの要素の組を操作するためのStreamを作る．
+	 * 
+	 * @see TupleUtil#window2(List)
+	 * @param list
+	 * @return 前後3つの要素の組を要素とするStream
+	 */
+	public static <T> Stream<Tuple3<T, T, T>> window3(List<T> list) {
+		Objects.requireNonNull(list);
+		
+		if(list.size() < 3) {
+			return Stream.empty();
+		}
+		return zip(
+				list,
+				list.subList(1, list.size()),
+				list.subList(2, list.size()));
+	}
+	
+	/**
+	 * 入力したListから前後4つの要素の組を操作するためのStreamを作る．
+	 * 
+	 * @see TupleUtil#window2(List)
+	 * @param list
+	 * @return 前後4つの要素の組を要素とするStream
+	 */
+	public static <T> Stream<Tuple4<T, T, T, T>> window4(List<T> list) {
+		Objects.requireNonNull(list);
+		
+		if(list.size() < 5) {
+			return Stream.empty();
+		}
+		return zip(
+				list,
+				list.subList(1, list.size()),
+				list.subList(2, list.size()),
+				list.subList(3, list.size()));
+	}
+	
+	/**
+	 * 入力したListから前後5つの要素の組を操作するためのStreamを作る．
+	 * 
+	 * @see TupleUtil#window2(List)
+	 * @param list
+	 * @return 前後5つの要素の組を要素とするStream
+	 */
+	public static <T> Stream<Tuple5<T, T, T, T, T>> window5(List<T> list) {
+		Objects.requireNonNull(list);
+		
+		if(list.size() < 5) {
+			return Stream.empty();
+		}
+		return zip(
+				list,
+				list.subList(1, list.size()),
+				list.subList(2, list.size()),
+				list.subList(3, list.size()),
+				list.subList(4, list.size()));
+	}
 	
 	/**
 	 * 要素ごとのListに変換するCollectorを得る.
@@ -378,15 +455,15 @@ public final class TupleUtil {
 			Tuple2<List<T1>, List<T2>>> toList2() {
 		return Collector.of(
 				() -> Tuple.of(
-						new ArrayList<>(10),
-						new ArrayList<>(10)),
+						new ArrayList<>(),
+						new ArrayList<>()),
 				(l, t) -> {
 					l.v1.add(t.v1);
 					l.v2.add(t.v2);},
-				(l1, l2) -> {
-					l1.v1.addAll(l2.v1);
-					l1.v2.addAll(l2.v2);
-					return l1;}
+				(left, right) -> {
+					left.v1.addAll(right.v1);
+					left.v2.addAll(right.v2);
+					return left;}
 				);
 	}
 	
@@ -398,18 +475,18 @@ public final class TupleUtil {
 			Tuple3<List<T1>, List<T2>, List<T3>>> toList3() {
 		return Collector.of(
 				() -> Tuple.of(
-						new ArrayList<>(10),
-						new ArrayList<>(10),
-						new ArrayList<>(10)),
+						new ArrayList<>(),
+						new ArrayList<>(),
+						new ArrayList<>()),
 				(l, t) -> {
 					l.v1.add(t.v1);
 					l.v2.add(t.v2);
 					l.v3.add(t.v3);},
-				(l1, l2) -> {
-					l1.v1.addAll(l2.v1);
-					l1.v2.addAll(l2.v2);
-					l1.v3.addAll(l2.v3);
-					return l1;}
+				(left, right) -> {
+					left.v1.addAll(right.v1);
+					left.v2.addAll(right.v2);
+					left.v3.addAll(right.v3);
+					return left;}
 				);
 	}
 	
@@ -421,21 +498,21 @@ public final class TupleUtil {
 			Tuple4<List<T1>, List<T2>, List<T3>, List<T4>>> toList4() {
 		return Collector.of(
 				() -> Tuple.of(
-						new ArrayList<>(10),
-						new ArrayList<>(10),
-						new ArrayList<>(10),
-						new ArrayList<>(10)),
+						new ArrayList<>(),
+						new ArrayList<>(),
+						new ArrayList<>(),
+						new ArrayList<>()),
 				(l, t) -> {
 					l.v1.add(t.v1);
 					l.v2.add(t.v2);
 					l.v3.add(t.v3);
 					l.v4.add(t.v4);},
-				(l1, l2) -> {
-					l1.v1.addAll(l2.v1);
-					l1.v2.addAll(l2.v2);
-					l1.v3.addAll(l2.v3);
-					l1.v4.addAll(l2.v4);
-					return l1;}
+				(left, right) -> {
+					left.v1.addAll(right.v1);
+					left.v2.addAll(right.v2);
+					left.v3.addAll(right.v3);
+					left.v4.addAll(right.v4);
+					return left;}
 				);
 	}
 	
@@ -447,24 +524,24 @@ public final class TupleUtil {
 			Tuple5<List<T1>, List<T2>, List<T3>, List<T4>, List<T5>>> toList5() {
 		return Collector.of(
 				() -> Tuple.of(
-						new ArrayList<>(10),
-						new ArrayList<>(10),
-						new ArrayList<>(10),
-						new ArrayList<>(10),
-						new ArrayList<>(10)),
+						new ArrayList<>(),
+						new ArrayList<>(),
+						new ArrayList<>(),
+						new ArrayList<>(),
+						new ArrayList<>()),
 				(l, t) -> {
 					l.v1.add(t.v1);
 					l.v2.add(t.v2);
 					l.v3.add(t.v3);
 					l.v4.add(t.v4);
 					l.v5.add(t.v5);},
-				(l1, l2) -> {
-					l1.v1.addAll(l2.v1);
-					l1.v2.addAll(l2.v2);
-					l1.v3.addAll(l2.v3);
-					l1.v4.addAll(l2.v4);
-					l1.v5.addAll(l2.v5);
-					return l1;}
+				(left, right) -> {
+					left.v1.addAll(right.v1);
+					left.v2.addAll(right.v2);
+					left.v3.addAll(right.v3);
+					left.v4.addAll(right.v4);
+					left.v5.addAll(right.v5);
+					return left;}
 				);
 	}
 	
