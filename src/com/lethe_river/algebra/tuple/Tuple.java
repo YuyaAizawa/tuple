@@ -2,8 +2,7 @@ package com.lethe_river.algebra.tuple;
 
 import java.util.Comparator;
 
-public final class Tuple {
-	private Tuple() {}
+public interface Tuple {
 	
 	/**
 	 * 指定された要素を持つTupleを返す．
