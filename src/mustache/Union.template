@@ -1,0 +1,183 @@
+|package com.lethe_river.algebra.union;
+|
+|import java.util.Objects;
+|import java.util.Optional;
+|import java.util.function.Consumer;
+|import java.util.function.Function;
+|
+|/**
+| * 型パラメータで指定した，いずれかの型の要素を持つコンテナ・オブジェクト．
+| * {{#items}}T{{item}}{{#comma}}, {{/comma}}{{/items}}のいずれかの型の要素を持つオブジェクトを定義し，操作を提供する．
+| * ユーザーはこのオブジェクトに対し，要素の可能性のある型それぞれに対する操作を記述することで，複数の型を統一的に扱うことができる．
+| * 型パラメータ{{#items}}T{{item}}{{#comma}}, {{/comma}}{{/items}}には異なる型が指定されることを想定している．
+| * 
+| * @author YuyaAizawa
+| *
+| * {{#items}}@param <T{{item}}>
+| * {{/items}}
+| */
+|public final class Union{{size}}<{{#items}}T{{item}}{{#comma}}, {{/comma}}{{/items}}> {
+|	
+|	private interface Member<{{#items}}T{{item}}{{#comma}}, {{/comma}}{{/items}}> {
+|		public <R> R match(
+|				{{#items}}Function<? super T{{item}}, ? extends R> f{{item}}{{#comma}},
+|				{{/comma}}{{/items}});
+|		public void match(
+|				{{#items}}Consumer<? super T{{item}}> c{{item}}{{#comma}},
+|				{{/comma}}{{/items}});
+|		public Object getValue();
+|	}
+|	
+|	private final Member<{{#items}}T{{item}}{{#comma}}, {{/comma}}{{/items}}> member;
+|{{#items}}
+|	
+|	/**
+|	 * 指定されたT{{item}}型の要素を持つ新しいUnion{{size}}を返す．
+|	 * 
+|	 * @param value
+|	 * @return 新しいUnion{{size}}
+|	 * @exception NullPointerException valueがnullの場合
+|	 */
+|	public static <{{#items}}T{{item}}{{#comma}}, {{/comma}}{{/items}}> Union{{size}}<{{#items}}T{{item}}{{#comma}}, {{/comma}}{{/items}}> of{{item}}(T{{item}} value) {
+|		return new Union{{size}}<{{#items}}T{{item}}{{#comma}}, {{/comma}}{{/items}}>(new Member{{item}}<>(Objects.requireNonNull(value)));
+|	}
+|	
+|	/**
+|	 * 指定されたT{{item}}型の要素を持つ新しいUnion{{size}}を返す．
+|	 * 
+|	 * @deprecated {@link Union2#of1(Object) Union{{size}}#of{{item}}(T{{item}})}に置き換えられた
+|	 * 
+|	 * @param value
+|	 * @return 新しいUnion{{size}}
+|	 * @exception NullPointerException valueがnullの場合
+|	 */
+|	public static <{{#items}}T{{item}}{{#comma}}, {{/comma}}{{/items}}> Union{{size}}<{{#items}}T{{item}}{{#comma}}, {{/comma}}{{/items}}> _{{item}}(T{{item}} value) {
+|		return of{{item}}(value);
+|	}{{/items}}
+|	
+|	/**
+|	 * 要素に関数を適用し，結果を返す．
+|	 * 与えたそれぞれの関数のうち，要素の型に対する関数が適用され，結果が返る．
+|	 * 与える関数の戻り値の型は一致していなければならない．
+|	 * 
+|{{#items}}	 * @param f{{item}} T{{item}}に適用する関数
+|{{/items}}	 * @return 関数の戻り値
+|	*/
+|	public <R> R map(
+|				{{#items}}Function<? super T{{item}}, ? extends R> f{{item}}{{#comma}},
+|				{{/comma}}{{/items}}) {
+|		return member.match({{#items}}f{{item}}{{#comma}}, {{/comma}}{{/items}});
+|	}
+|	
+|	/**
+|	 * 要素に関数を適用し，結果を返す．
+|	 * 与えたそれぞれの関数のうち，要素の型に対する関数が適用され，結果が返る．
+|	 * 与える関数の戻り値の型は一致していなければならない．
+|	 * 
+|	 * @deprecated {@link Union{{size}}#map({{#items}}Function{{#comma}}, {{/comma}}{{/items}}) Union{{size}}#map({{#items}}Function&lt? super T{{item}}, ? extends R&gt;{{item}}{{#comma}}, {{/comma}}{{/items}} }に置き換えられた
+|	 * 
+|{{#items}}	 * @param f{{item}} T{{item}}に適用する関数
+|{{/items}}	 * @return 関数の戻り値
+|	*/
+|	public <R> R match(
+|				{{#items}}Function<? super T{{item}}, ? extends R> f{{item}}{{#comma}},
+|				{{/comma}}{{/items}}) {
+|		return map({{#items}}f{{item}}{{#comma}}, {{/comma}}{{/items}});
+|	}
+|	
+|	/**
+|	 * 要素に対してオペレーションを実行する．
+|	 * 与えたそれぞれのオペレーションのうち，要素の型に対するオペレーションが実行される．
+|	 * 
+|{{#items}}	 * @param f{{item}} T{{item}}に対するオペレーション
+|{{/items}}	 */
+|	public void match(
+|				{{#items}}Consumer<? super T{{item}}> c{{item}}{{#comma}},
+|				{{/comma}}{{/items}}) {
+|		member.match({{#items}}c{{item}}{{#comma}}, {{/comma}}{{/items}});
+|	}
+|{{#items}}
+|	
+|	/**
+|	 * このインスタンスのT{{item}}型の要素を返す．
+|	 * このインスタンスのT{{item}}型の要素を表すOptionalを返す．要素がT{{item}}型でない場合は空のOptionalを返す．
+|	 * 
+|	 * @return T{{item}}型の要素を表すOptional,または空のOptional
+|	 */
+|	public Optional<T{{item}}> get{{item}}() {
+|		// TODO 全部nullになっているので手動で直す
+|		return Optional.ofNullable(map({{#items}}t{{item}} -> null{{#comma}}, {{/comma}}{{/items}}));
+|	}{{/items}}
+|	
+|	/**
+|	 * 要素の文字列表現を返す.
+|	 * 
+|	 * @return 要素の文字列表現
+|	 */
+|	@Override
+|	public String toString() {
+|		return map({{#items}}T{{item}}::toString{{#comma}}, {{/comma}}{{/items}});
+|	}
+|	
+|	/**
+|	 * 要素に基づくハッシュを返す．
+|	 * 
+|	 * @return 要素に基づくハッシュ
+|	 */
+|	@Override
+|	public int hashCode() {
+|		return member.getValue().hashCode();
+|	}
+|	
+|	/**
+|	 * 指定されたオブジェクトがUnion{{size}}と等しいか比較する．
+|	 * 指定されたオブジェクトもUnion{{size}}であり，内部の要素が等しいときにtrueをかえす．
+|	 * 
+|	 * @return 指定されたオブジェクトがUnionと等しい場合は true
+|	 */
+|	@Override
+|	public boolean equals(Object obj) {
+|		if (this == obj)
+|			return true;
+|		if (obj == null)
+|			return false;
+|		if (getClass() != obj.getClass())
+|			return false;
+|		@SuppressWarnings("rawtypes")
+|		Object other = ((Union{{size}})obj).member.getValue();
+|		return member.getValue().equals(other);
+|	}
+|
+|	private Union{{size}}(Member<{{#items}}T{{item}}{{#comma}}, {{/comma}}{{/items}}> member) {
+|		this.member = member;
+|	}
+|{{#items}}
+|	
+|	private static class Member{{item}}<{{#items}}T{{item}}{{#comma}}, {{/comma}}{{/items}}> implements Member<{{#items}}T{{item}}{{#comma}}, {{/comma}}{{/items}}> {
+|		
+|		private final T{{item}} value;
+|		
+|		Member{{item}}(T{{item}} value) {
+|			this.value = value;
+|		}
+|		
+|		@Override
+|		public <R> R match(
+|				{{#items}}Function<? super T{{item}}, ? extends R> f{{item}}{{#comma}},
+|				{{/comma}}{{/items}}) {
+|			return f{{item}}.apply(value);
+|		}
+|		
+|		@Override
+|		public void match(
+|				{{#items}}Consumer<? super T{{item}}> c{{item}}{{#comma}},
+|				{{/comma}}{{/items}}) {
+|			c{{item}}.accept(value);
+|		}
+|		
+|		@Override
+|		public Object getValue() {
+|			return value;
+|		}
+|	}{{/items}}
+|}
