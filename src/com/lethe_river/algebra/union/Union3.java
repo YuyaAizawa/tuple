@@ -16,8 +16,7 @@ public final class Union3<T1, T2, T3> {
 	private final Member<T1, T2, T3> member;
 	
 	public static <T1, T2, T3> Union3<T1, T2, T3> of1(T1 value) {
-		Objects.nonNull(value);
-		return new Union3<T1, T2, T3>(new Member1<>(value));
+		return new Union3<T1, T2, T3>(new Member1<>(Objects.requireNonNull(value)));
 	}
 	@Deprecated
 	public static <T1, T2, T3> Union3<T1, T2, T3> _1(T1 value) {
@@ -25,8 +24,7 @@ public final class Union3<T1, T2, T3> {
 	}
 	
 	public static <T1, T2, T3> Union3<T1, T2, T3> of2(T2 value) {
-		Objects.nonNull(value);
-		return new Union3<T1, T2, T3>(new Member2<>(value));
+		return new Union3<T1, T2, T3>(new Member2<>(Objects.requireNonNull(value)));
 	}
 	@Deprecated
 	public static <T1, T2, T3> Union3<T1, T2, T3> _2(T2 value) {
@@ -34,8 +32,7 @@ public final class Union3<T1, T2, T3> {
 	}
 	
 	public static <T1, T2, T3> Union3<T1, T2, T3> of3(T3 value) {
-		Objects.nonNull(value);
-		return new Union3<T1, T2, T3>(new Member3<>(value));
+		return new Union3<T1, T2, T3>(new Member3<>(Objects.requireNonNull(value)));
 	}
 	@Deprecated
 	public static <T1, T2, T3> Union3<T1, T2, T3> _3(T3 value) {

@@ -16,8 +16,7 @@ public final class Union5<T1, T2, T3, T4, T5> {
 	private final Member<T1, T2, T3, T4, T5> member;
 	
 	public static <T1, T2, T3, T4, T5> Union5<T1, T2, T3, T4, T5> of1(T1 value) {
-		Objects.nonNull(value);
-		return new Union5<T1, T2, T3, T4, T5>(new Member1<>(value));
+		return new Union5<T1, T2, T3, T4, T5>(new Member1<>(Objects.requireNonNull(value)));
 	}
 	@Deprecated
 	public static <T1, T2, T3, T4, T5> Union5<T1, T2, T3, T4, T5> _1(T1 value) {
@@ -25,8 +24,7 @@ public final class Union5<T1, T2, T3, T4, T5> {
 	}
 	
 	public static <T1, T2, T3, T4, T5> Union5<T1, T2, T3, T4, T5> of2(T2 value) {
-		Objects.nonNull(value);
-		return new Union5<T1, T2, T3, T4, T5>(new Member2<>(value));
+		return new Union5<T1, T2, T3, T4, T5>(new Member2<>(Objects.requireNonNull(value)));
 	}
 	@Deprecated
 	public static <T1, T2, T3, T4, T5> Union5<T1, T2, T3, T4, T5> _2(T2 value) {
@@ -34,8 +32,7 @@ public final class Union5<T1, T2, T3, T4, T5> {
 	}
 	
 	public static <T1, T2, T3, T4, T5> Union5<T1, T2, T3, T4, T5> of3(T3 value) {
-		Objects.nonNull(value);
-		return new Union5<T1, T2, T3, T4, T5>(new Member3<>(value));
+		return new Union5<T1, T2, T3, T4, T5>(new Member3<>(Objects.requireNonNull(value)));
 	}
 	@Deprecated
 	public static <T1, T2, T3, T4, T5> Union5<T1, T2, T3, T4, T5> _3(T3 value) {
@@ -43,8 +40,7 @@ public final class Union5<T1, T2, T3, T4, T5> {
 	}
 	
 	public static <T1, T2, T3, T4, T5> Union5<T1, T2, T3, T4, T5> of4(T4 value) {
-		Objects.nonNull(value);
-		return new Union5<T1, T2, T3, T4, T5>(new Member4<>(value));
+		return new Union5<T1, T2, T3, T4, T5>(new Member4<>(Objects.requireNonNull(value)));
 	}
 	@Deprecated
 	public static <T1, T2, T3, T4, T5> Union5<T1, T2, T3, T4, T5> _4(T4 value) {
@@ -52,8 +48,7 @@ public final class Union5<T1, T2, T3, T4, T5> {
 	}
 	
 	public static <T1, T2, T3, T4, T5> Union5<T1, T2, T3, T4, T5> of5(T5 value) {
-		Objects.nonNull(value);
-		return new Union5<T1, T2, T3, T4, T5>(new Member5<>(value));
+		return new Union5<T1, T2, T3, T4, T5>(new Member5<>(Objects.requireNonNull(value)));
 	}
 	@Deprecated
 	public static <T1, T2, T3, T4, T5> Union5<T1, T2, T3, T4, T5> _5(T5 value) {

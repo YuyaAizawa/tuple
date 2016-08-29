@@ -34,8 +34,7 @@ public final class Union2<T1, T2> {
 	 * @exception NullPointerException valueがnullの場合
 	 */
 	public static <T1, T2> Union2<T1, T2> of1(T1 value) {
-		Objects.nonNull(value);
-		return new Union2<T1, T2>(new Member1<>(value));
+		return new Union2<T1, T2>(new Member1<>(Objects.requireNonNull(value)));
 	}
 	
 	/**
@@ -59,8 +58,7 @@ public final class Union2<T1, T2> {
 	 * @exception NullPointerException valueがnullの場合
 	 */
 	public static <T1, T2> Union2<T1, T2> of2(T2 value) {
-		Objects.nonNull(value);
-		return new Union2<T1, T2>(new Member2<>(value));
+		return new Union2<T1, T2>(new Member2<>(Objects.requireNonNull(value)));
 	}
 	
 	/**
