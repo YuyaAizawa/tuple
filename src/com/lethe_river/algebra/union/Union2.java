@@ -7,9 +7,9 @@ import java.util.function.Function;
 
 /**
  * 型パラメータで指定した，いずれかの型の要素を持つコンテナ・オブジェクト．
- * T1またはT2のいずれかの型の要素を持つオブジェクトを定義し，操作を提供する．
+ * T1, T2のいずれかの型の要素を持つオブジェクトを定義し，操作を提供する．
  * ユーザーはこのオブジェクトに対し，要素の可能性のある型それぞれに対する操作を記述することで，複数の型を統一的に扱うことができる．
- * 型パラメータT1,T2には異なる型が指定されることを想定している．
+ * 型パラメータT1, T2には異なる型が指定されることを想定している．
  * 
  * @author YuyaAizawa
  *
@@ -19,13 +19,18 @@ import java.util.function.Function;
 public final class Union2<T1, T2> {
 	
 	private interface Member<T1, T2> {
-		public <R> R match(Function<T1, R> f1, Function<T2, R> f2);
-		public void match(Consumer<T1> f1, Consumer<T2> f2);
+		public <R> R match(
+				Function<? super T1, ? extends R> f1,
+				Function<? super T2, ? extends R> f2);
+		public void match(
+				Consumer<? super T1> c1,
+				Consumer<? super T2> c2);
 		public Object getValue();
 	}
 
 	private final Member<T1, T2> member;
-	
+
+
 	/**
 	 * 指定されたT1型の要素を持つ新しいUnion2を返す．
 	 * 
@@ -36,7 +41,7 @@ public final class Union2<T1, T2> {
 	public static <T1, T2> Union2<T1, T2> of1(T1 value) {
 		return new Union2<T1, T2>(new Member1<>(Objects.requireNonNull(value)));
 	}
-	
+
 	/**
 	 * 指定されたT1型の要素を持つ新しいUnion2を返す．
 	 * 
@@ -49,7 +54,7 @@ public final class Union2<T1, T2> {
 	public static <T1, T2> Union2<T1, T2> _1(T1 value) {
 		return of1(value);
 	}
-	
+
 	/**
 	 * 指定されたT2型の要素を持つ新しいUnion2を返す．
 	 * 
@@ -60,11 +65,11 @@ public final class Union2<T1, T2> {
 	public static <T1, T2> Union2<T1, T2> of2(T2 value) {
 		return new Union2<T1, T2>(new Member2<>(Objects.requireNonNull(value)));
 	}
-	
+
 	/**
 	 * 指定されたT2型の要素を持つ新しいUnion2を返す．
 	 * 
-	 * @deprecated {@link Union2#of2(Object) Union2#of2(T2)}に置き換えられた
+	 * @deprecated {@link Union2#of1(Object) Union2#of2(T2)}に置き換えられた
 	 * 
 	 * @param value
 	 * @return 新しいUnion2
@@ -73,7 +78,7 @@ public final class Union2<T1, T2> {
 	public static <T1, T2> Union2<T1, T2> _2(T2 value) {
 		return of2(value);
 	}
-	
+
 	/**
 	 * 要素に関数を適用し，結果を返す．
 	 * 与えたそれぞれの関数のうち，要素の型に対する関数が適用され，結果が返る．
@@ -82,9 +87,28 @@ public final class Union2<T1, T2> {
 	 * @param f1 T1に適用する関数
 	 * @param f2 T2に適用する関数
 	 * @return 関数の戻り値
-	 */
-	public <R> R match(Function<T1, R> f1, Function<T2, R> f2) {
+	*/
+	public <R> R map(
+				Function<? super T1, ? extends R> f1,
+				Function<? super T2, ? extends R> f2) {
 		return member.match(f1, f2);
+	}
+
+	/**
+	 * 要素に関数を適用し，結果を返す．
+	 * 与えたそれぞれの関数のうち，要素の型に対する関数が適用され，結果が返る．
+	 * 与える関数の戻り値の型は一致していなければならない．
+	 * 
+	 * @deprecated {@link Union2#map(Function, Function) Union2#map(Function&lt? super T1, ? extends R&gt;1, Function&lt? super T2, ? extends R&gt;2 }に置き換えられた
+	 * 
+	 * @param f1 T1に適用する関数
+	 * @param f2 T2に適用する関数
+	 * @return 関数の戻り値
+	*/
+	public <R> R match(
+				Function<? super T1, ? extends R> f1,
+				Function<? super T2, ? extends R> f2) {
+		return map(f1, f2);
 	}
 	
 	/**
@@ -94,9 +118,12 @@ public final class Union2<T1, T2> {
 	 * @param f1 T1に対するオペレーション
 	 * @param f2 T2に対するオペレーション
 	 */
-	public void match(Consumer<T1> f1, Consumer<T2> f2) {
-		member.match(f1, f2);
+	public void match(
+				Consumer<? super T1> c1,
+				Consumer<? super T2> c2) {
+		member.match(c1, c2);
 	}
+
 	
 	/**
 	 * このインスタンスのT1型の要素を返す．
@@ -105,19 +132,19 @@ public final class Union2<T1, T2> {
 	 * @return T1型の要素を表すOptional,または空のOptional
 	 */
 	public Optional<T1> get1() {
-		return Optional.ofNullable(match(t1 -> t1, t2 -> null));
+		return Optional.ofNullable(map(t1 -> t1, t2 -> null));
 	}
 	
 	/**
 	 * このインスタンスのT2型の要素を返す．
-	 * このインスタンスのT2型の要素を表すOptionalを返す．要素がT1型でない場合は空のOptionalを返す．
+	 * このインスタンスのT2型の要素を表すOptionalを返す．要素がT2型でない場合は空のOptionalを返す．
 	 * 
 	 * @return T2型の要素を表すOptional,または空のOptional
 	 */
 	public Optional<T2> get2() {
-		return Optional.ofNullable(match(t1 -> null, t2 -> t2));
+		return Optional.ofNullable(map(t1 -> null, t2 -> t2));
 	}
-	
+
 	/**
 	 * 要素の文字列表現を返す.
 	 * 
@@ -125,7 +152,7 @@ public final class Union2<T1, T2> {
 	 */
 	@Override
 	public String toString() {
-		return match(T1::toString, T2::toString);
+		return map(T1::toString, T2::toString);
 	}
 	
 	/**
@@ -160,6 +187,7 @@ public final class Union2<T1, T2> {
 	private Union2(Member<T1, T2> member) {
 		this.member = member;
 	}
+
 	
 	private static class Member1<T1, T2> implements Member<T1, T2> {
 		
@@ -170,13 +198,17 @@ public final class Union2<T1, T2> {
 		}
 		
 		@Override
-		public <R> R match(Function<T1, R> f1, Function<T2, R> f2) {
+		public <R> R match(
+				Function<? super T1, ? extends R> f1,
+				Function<? super T2, ? extends R> f2) {
 			return f1.apply(value);
 		}
 		
 		@Override
-		public void match(Consumer<T1> f1, Consumer<T2> f2) {
-			f1.accept(value);
+		public void match(
+				Consumer<? super T1> c1,
+				Consumer<? super T2> c2) {
+			c1.accept(value);
 		}
 		
 		@Override
@@ -194,13 +226,17 @@ public final class Union2<T1, T2> {
 		}
 		
 		@Override
-		public <R> R match(Function<T1, R> f1, Function<T2, R> f2) {
+		public <R> R match(
+				Function<? super T1, ? extends R> f1,
+				Function<? super T2, ? extends R> f2) {
 			return f2.apply(value);
 		}
 		
 		@Override
-		public void match(Consumer<T1> f1, Consumer<T2> f2) {
-			f2.accept(value);
+		public void match(
+				Consumer<? super T1> c1,
+				Consumer<? super T2> c2) {
+			c2.accept(value);
 		}
 		
 		@Override
