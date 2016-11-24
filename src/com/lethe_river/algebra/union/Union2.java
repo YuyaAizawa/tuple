@@ -17,13 +17,14 @@ import java.util.function.Function;
  * @param <T2>
  * 
  */
-public final class Union2<T1, T2> {
+
+public class Union2<T1, T2> {
 	
 	private interface Member<T1, T2> {
-		public <R> R map(
+		public <R> R match(
 				Function<? super T1, ? extends R> f1,
 				Function<? super T2, ? extends R> f2);
-		public void match(
+		public void matchDo(
 				Consumer<? super T1> c1,
 				Consumer<? super T2> c2);
 		public Object getValue();
@@ -89,10 +90,10 @@ public final class Union2<T1, T2> {
 	 * @param f2 T2に適用する関数
 	 * @return 関数の戻り値
 	*/
-	public <R> R map(
+	public final <R> R match(
 				Function<? super T1, ? extends R> f1,
 				Function<? super T2, ? extends R> f2) {
-		return member.map(f1, f2);
+		return member.match(f1, f2);
 	}
 	
 	/**
@@ -102,10 +103,10 @@ public final class Union2<T1, T2> {
 	 * @param f1 T1に対するオペレーション
 	 * @param f2 T2に対するオペレーション
 	 */
-	public void match(
+	public final void matchDo(
 				Consumer<? super T1> c1,
 				Consumer<? super T2> c2) {
-		member.match(c1, c2);
+		member.matchDo(c1, c2);
 	}
 
 	
@@ -116,7 +117,7 @@ public final class Union2<T1, T2> {
 	 * @return T1型の要素を表すOptional,または空のOptional
 	 */
 	public Optional<T1> get1() {
-		return Optional.ofNullable(map(t1 -> t1, t2 -> null));
+		return Optional.ofNullable(match(t1 -> t1, t2 -> null));
 	}
 	
 	/**
@@ -126,7 +127,7 @@ public final class Union2<T1, T2> {
 	 * @return T2型の要素を表すOptional,または空のOptional
 	 */
 	public Optional<T2> get2() {
-		return Optional.ofNullable(map(t1 -> null, t2 -> t2));
+		return Optional.ofNullable(match(t1 -> null, t2 -> t2));
 	}
 	
 	/**
@@ -136,7 +137,7 @@ public final class Union2<T1, T2> {
 	 */
 	@Override
 	public String toString() {
-		return map(T1::toString, T2::toString);
+		return match(T1::toString, T2::toString);
 	}
 	
 	/**
@@ -172,6 +173,16 @@ public final class Union2<T1, T2> {
 		this.member = member;
 	}
 
+	/**
+	 * 指定されたUnion2を用いてインスタンスを初期化する．
+	 * このクラスを継承したクラスを作るときに利用する．
+	 *
+	 * @param base 初期化に用いるインスタンス
+	 */
+	protected Union2(Union2<T1, T2> base) {
+		this.member = base.member;
+	}
+
 	
 	private static class Member1<T1, T2> implements Member<T1, T2> {
 		
@@ -182,14 +193,14 @@ public final class Union2<T1, T2> {
 		}
 		
 		@Override
-		public <R> R map(
+		public <R> R match(
 				Function<? super T1, ? extends R> f1,
 				Function<? super T2, ? extends R> f2) {
 			return f1.apply(value);
 		}
 		
 		@Override
-		public void match(
+		public void matchDo(
 				Consumer<? super T1> c1,
 				Consumer<? super T2> c2) {
 			c1.accept(value);
@@ -210,14 +221,14 @@ public final class Union2<T1, T2> {
 		}
 		
 		@Override
-		public <R> R map(
+		public <R> R match(
 				Function<? super T1, ? extends R> f1,
 				Function<? super T2, ? extends R> f2) {
 			return f2.apply(value);
 		}
 		
 		@Override
-		public void match(
+		public void matchDo(
 				Consumer<? super T1> c1,
 				Consumer<? super T2> c2) {
 			c2.accept(value);

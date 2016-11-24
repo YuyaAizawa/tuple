@@ -16,13 +16,14 @@
 | * {{#items}}@param <T{{item}}>
 | * {{/items}}
 | */
-|public final class Union{{size}}<{{#items}}T{{item}}{{#comma}}, {{/comma}}{{/items}}> {
+|
+|public class Union{{size}}<{{#items}}T{{item}}{{#comma}}, {{/comma}}{{/items}}> {
 |	
 |	private interface Member<{{#items}}T{{item}}{{#comma}}, {{/comma}}{{/items}}> {
-|		public <R> R map(
+|		public <R> R match(
 |				{{#items}}Function<? super T{{item}}, ? extends R> f{{item}}{{#comma}},
 |				{{/comma}}{{/items}});
-|		public void match(
+|		public void matchDo(
 |				{{#items}}Consumer<? super T{{item}}> c{{item}}{{#comma}},
 |				{{/comma}}{{/items}});
 |		public Object getValue();
@@ -63,10 +64,10 @@
 |{{#items}}	 * @param f{{item}} T{{item}}に適用する関数
 |{{/items}}	 * @return 関数の戻り値
 |	*/
-|	public <R> R map(
+|	public final <R> R match(
 |				{{#items}}Function<? super T{{item}}, ? extends R> f{{item}}{{#comma}},
 |				{{/comma}}{{/items}}) {
-|		return member.map({{#items}}f{{item}}{{#comma}}, {{/comma}}{{/items}});
+|		return member.match({{#items}}f{{item}}{{#comma}}, {{/comma}}{{/items}});
 |	}
 |	
 |	/**
@@ -75,10 +76,10 @@
 |	 * 
 |{{#items}}	 * @param f{{item}} T{{item}}に対するオペレーション
 |{{/items}}	 */
-|	public void match(
+|	public final void matchDo(
 |				{{#items}}Consumer<? super T{{item}}> c{{item}}{{#comma}},
 |				{{/comma}}{{/items}}) {
-|		member.match({{#items}}c{{item}}{{#comma}}, {{/comma}}{{/items}});
+|		member.matchDo({{#items}}c{{item}}{{#comma}}, {{/comma}}{{/items}});
 |	}
 |{{#items}}
 |	
@@ -90,7 +91,7 @@
 |	 */
 |	public Optional<T{{item}}> get{{item}}() {
 |		// TODO 全部nullになっているので手動で直す
-|		return Optional.ofNullable(map({{#items}}t{{item}} -> null{{#comma}}, {{/comma}}{{/items}}));
+|		return Optional.ofNullable(match({{#items}}t{{item}} -> null{{#comma}}, {{/comma}}{{/items}}));
 |	}{{/items}}
 |	
 |	/**
@@ -100,7 +101,7 @@
 |	 */
 |	@Override
 |	public String toString() {
-|		return map({{#items}}T{{item}}::toString{{#comma}}, {{/comma}}{{/items}});
+|		return match({{#items}}T{{item}}::toString{{#comma}}, {{/comma}}{{/items}});
 |	}
 |	
 |	/**
@@ -135,6 +136,16 @@
 |	private Union{{size}}(Member<{{#items}}T{{item}}{{#comma}}, {{/comma}}{{/items}}> member) {
 |		this.member = member;
 |	}
+|
+|	/**
+|	 * 指定されたUnion{{size}}を用いてインスタンスを初期化する．
+|	 * このクラスを継承したクラスを作るときに利用する．
+|	 *
+|	 * @param base 初期化に用いるインスタンス
+|	 */
+|	protected Union{{size}}(Union{{size}}<{{#items}}T{{item}}{{#comma}}, {{/comma}}{{/items}}> base) {
+|		this.member = base.member;
+|	}
 |{{#items}}
 |	
 |	private static class Member{{item}}<{{#items}}T{{item}}{{#comma}}, {{/comma}}{{/items}}> implements Member<{{#items}}T{{item}}{{#comma}}, {{/comma}}{{/items}}> {
@@ -146,14 +157,14 @@
 |		}
 |		
 |		@Override
-|		public <R> R map(
+|		public <R> R match(
 |				{{#items}}Function<? super T{{item}}, ? extends R> f{{item}}{{#comma}},
 |				{{/comma}}{{/items}}) {
 |			return f{{item}}.apply(value);
 |		}
 |		
 |		@Override
-|		public void match(
+|		public void matchDo(
 |				{{#items}}Consumer<? super T{{item}}> c{{item}}{{#comma}},
 |				{{/comma}}{{/items}}) {
 |			c{{item}}.accept(value);

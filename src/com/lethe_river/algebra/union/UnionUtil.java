@@ -63,7 +63,7 @@ public class UnionUtil {
 	Tuple2<List<T1>, List<T2>>> {
 		@Override
 		public BiConsumer<Tuple2<LinkedList<T1>, LinkedList<T2>>, Union2<T1, T2>> accumulator() {
-			return (tp , u) -> {u.match(
+			return (tp , u) -> {u.matchDo(
 					t1 -> {tp.v1.add(t1);},
 					t2 -> tp.v2.add(t2));};
 		}
@@ -101,7 +101,7 @@ public class UnionUtil {
 	Tuple3<List<T1>, List<T2>, List<T3>>> {
 		@Override
 		public BiConsumer<Tuple3<LinkedList<T1>, LinkedList<T2>, LinkedList<T3>>, Union3<T1, T2, T3>> accumulator() {
-			return (tp , u) -> {u.match(
+			return (tp , u) -> {u.matchDo(
 					t1 -> {tp.v1.add(t1);},
 					t2 -> tp.v2.add(t2),
 					t3 -> tp.v3.add(t3));};
@@ -142,7 +142,7 @@ public class UnionUtil {
 	Tuple4<List<T1>, List<T2>, List<T3>, List<T4>>> {
 		@Override
 		public BiConsumer<Tuple4<LinkedList<T1>, LinkedList<T2>, LinkedList<T3>, LinkedList<T4>>, Union4<T1, T2, T3, T4>> accumulator() {
-			return (tp , u) -> {u.match(
+			return (tp , u) -> {u.matchDo(
 					t1 -> {tp.v1.add(t1);},
 					t2 -> tp.v2.add(t2),
 					t3 -> tp.v3.add(t3),
@@ -186,7 +186,7 @@ public class UnionUtil {
 	Tuple5<List<T1>, List<T2>, List<T3>, List<T4>, List<T5>>> {
 		@Override
 		public BiConsumer<Tuple5<LinkedList<T1>, LinkedList<T2>, LinkedList<T3>, LinkedList<T4>, LinkedList<T5>>, Union5<T1, T2, T3, T4, T5>> accumulator() {
-			return (tp , u) -> {u.match(
+			return (tp , u) -> {u.matchDo(
 					t1 -> {tp.v1.add(t1);},
 					t2 -> tp.v2.add(t2),
 					t3 -> tp.v3.add(t3),

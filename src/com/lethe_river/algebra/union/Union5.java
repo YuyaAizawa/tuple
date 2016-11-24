@@ -20,16 +20,17 @@ import java.util.function.Function;
  * @param <T5>
  * 
  */
-public final class Union5<T1, T2, T3, T4, T5> {
+
+public class Union5<T1, T2, T3, T4, T5> {
 	
 	private interface Member<T1, T2, T3, T4, T5> {
-		public <R> R map(
+		public <R> R match(
 				Function<? super T1, ? extends R> f1,
 				Function<? super T2, ? extends R> f2,
 				Function<? super T3, ? extends R> f3,
 				Function<? super T4, ? extends R> f4,
 				Function<? super T5, ? extends R> f5);
-		public void match(
+		public void matchDo(
 				Consumer<? super T1> c1,
 				Consumer<? super T2> c2,
 				Consumer<? super T3> c3,
@@ -173,13 +174,13 @@ public final class Union5<T1, T2, T3, T4, T5> {
 	 * @param f5 T5に適用する関数
 	 * @return 関数の戻り値
 	*/
-	public <R> R map(
+	public final <R> R match(
 				Function<? super T1, ? extends R> f1,
 				Function<? super T2, ? extends R> f2,
 				Function<? super T3, ? extends R> f3,
 				Function<? super T4, ? extends R> f4,
 				Function<? super T5, ? extends R> f5) {
-		return member.map(f1, f2, f3, f4, f5);
+		return member.match(f1, f2, f3, f4, f5);
 	}
 	
 	/**
@@ -192,13 +193,13 @@ public final class Union5<T1, T2, T3, T4, T5> {
 	 * @param f4 T4に対するオペレーション
 	 * @param f5 T5に対するオペレーション
 	 */
-	public void match(
+	public final void matchDo(
 				Consumer<? super T1> c1,
 				Consumer<? super T2> c2,
 				Consumer<? super T3> c3,
 				Consumer<? super T4> c4,
 				Consumer<? super T5> c5) {
-		member.match(c1, c2, c3, c4, c5);
+		member.matchDo(c1, c2, c3, c4, c5);
 	}
 
 	
@@ -209,7 +210,7 @@ public final class Union5<T1, T2, T3, T4, T5> {
 	 * @return T1型の要素を表すOptional,または空のOptional
 	 */
 	public Optional<T1> get1() {
-		return Optional.ofNullable(map(t1 -> t1, t2 -> null, t3 -> null, t4 -> null, t5 -> null));
+		return Optional.ofNullable(match(t1 -> t1, t2 -> null, t3 -> null, t4 -> null, t5 -> null));
 	}
 	
 	/**
@@ -219,7 +220,7 @@ public final class Union5<T1, T2, T3, T4, T5> {
 	 * @return T2型の要素を表すOptional,または空のOptional
 	 */
 	public Optional<T2> get2() {
-		return Optional.ofNullable(map(t1 -> null, t2 -> t2, t3 -> null, t4 -> null, t5 -> null));
+		return Optional.ofNullable(match(t1 -> null, t2 -> t2, t3 -> null, t4 -> null, t5 -> null));
 	}
 	
 	/**
@@ -229,7 +230,7 @@ public final class Union5<T1, T2, T3, T4, T5> {
 	 * @return T3型の要素を表すOptional,または空のOptional
 	 */
 	public Optional<T3> get3() {
-		return Optional.ofNullable(map(t1 -> null, t2 -> null, t3 -> t3, t4 -> null, t5 -> null));
+		return Optional.ofNullable(match(t1 -> null, t2 -> null, t3 -> t3, t4 -> null, t5 -> null));
 	}
 	
 	/**
@@ -239,7 +240,7 @@ public final class Union5<T1, T2, T3, T4, T5> {
 	 * @return T4型の要素を表すOptional,または空のOptional
 	 */
 	public Optional<T4> get4() {
-		return Optional.ofNullable(map(t1 -> null, t2 -> null, t3 -> null, t4 -> t4, t5 -> null));
+		return Optional.ofNullable(match(t1 -> null, t2 -> null, t3 -> null, t4 -> t4, t5 -> null));
 	}
 	
 	/**
@@ -249,7 +250,7 @@ public final class Union5<T1, T2, T3, T4, T5> {
 	 * @return T5型の要素を表すOptional,または空のOptional
 	 */
 	public Optional<T5> get5() {
-		return Optional.ofNullable(map(t1 -> null, t2 -> null, t3 -> null, t4 -> null, t5 -> t5));
+		return Optional.ofNullable(match(t1 -> null, t2 -> null, t3 -> null, t4 -> null, t5 -> t5));
 	}
 	
 	/**
@@ -259,7 +260,7 @@ public final class Union5<T1, T2, T3, T4, T5> {
 	 */
 	@Override
 	public String toString() {
-		return map(T1::toString, T2::toString, T3::toString, T4::toString, T5::toString);
+		return match(T1::toString, T2::toString, T3::toString, T4::toString, T5::toString);
 	}
 	
 	/**
@@ -295,6 +296,16 @@ public final class Union5<T1, T2, T3, T4, T5> {
 		this.member = member;
 	}
 
+	/**
+	 * 指定されたUnion5を用いてインスタンスを初期化する．
+	 * このクラスを継承したクラスを作るときに利用する．
+	 *
+	 * @param base 初期化に用いるインスタンス
+	 */
+	protected Union5(Union5<T1, T2, T3, T4, T5> base) {
+		this.member = base.member;
+	}
+
 	
 	private static class Member1<T1, T2, T3, T4, T5> implements Member<T1, T2, T3, T4, T5> {
 		
@@ -305,7 +316,7 @@ public final class Union5<T1, T2, T3, T4, T5> {
 		}
 		
 		@Override
-		public <R> R map(
+		public <R> R match(
 				Function<? super T1, ? extends R> f1,
 				Function<? super T2, ? extends R> f2,
 				Function<? super T3, ? extends R> f3,
@@ -315,7 +326,7 @@ public final class Union5<T1, T2, T3, T4, T5> {
 		}
 		
 		@Override
-		public void match(
+		public void matchDo(
 				Consumer<? super T1> c1,
 				Consumer<? super T2> c2,
 				Consumer<? super T3> c3,
@@ -339,7 +350,7 @@ public final class Union5<T1, T2, T3, T4, T5> {
 		}
 		
 		@Override
-		public <R> R map(
+		public <R> R match(
 				Function<? super T1, ? extends R> f1,
 				Function<? super T2, ? extends R> f2,
 				Function<? super T3, ? extends R> f3,
@@ -349,7 +360,7 @@ public final class Union5<T1, T2, T3, T4, T5> {
 		}
 		
 		@Override
-		public void match(
+		public void matchDo(
 				Consumer<? super T1> c1,
 				Consumer<? super T2> c2,
 				Consumer<? super T3> c3,
@@ -373,7 +384,7 @@ public final class Union5<T1, T2, T3, T4, T5> {
 		}
 		
 		@Override
-		public <R> R map(
+		public <R> R match(
 				Function<? super T1, ? extends R> f1,
 				Function<? super T2, ? extends R> f2,
 				Function<? super T3, ? extends R> f3,
@@ -383,7 +394,7 @@ public final class Union5<T1, T2, T3, T4, T5> {
 		}
 		
 		@Override
-		public void match(
+		public void matchDo(
 				Consumer<? super T1> c1,
 				Consumer<? super T2> c2,
 				Consumer<? super T3> c3,
@@ -407,7 +418,7 @@ public final class Union5<T1, T2, T3, T4, T5> {
 		}
 		
 		@Override
-		public <R> R map(
+		public <R> R match(
 				Function<? super T1, ? extends R> f1,
 				Function<? super T2, ? extends R> f2,
 				Function<? super T3, ? extends R> f3,
@@ -417,7 +428,7 @@ public final class Union5<T1, T2, T3, T4, T5> {
 		}
 		
 		@Override
-		public void match(
+		public void matchDo(
 				Consumer<? super T1> c1,
 				Consumer<? super T2> c2,
 				Consumer<? super T3> c3,
@@ -441,7 +452,7 @@ public final class Union5<T1, T2, T3, T4, T5> {
 		}
 		
 		@Override
-		public <R> R map(
+		public <R> R match(
 				Function<? super T1, ? extends R> f1,
 				Function<? super T2, ? extends R> f2,
 				Function<? super T3, ? extends R> f3,
@@ -451,7 +462,7 @@ public final class Union5<T1, T2, T3, T4, T5> {
 		}
 		
 		@Override
-		public void match(
+		public void matchDo(
 				Consumer<? super T1> c1,
 				Consumer<? super T2> c2,
 				Consumer<? super T3> c3,
