@@ -17,11 +17,12 @@ import java.util.function.Function;
  * @param <T2>
  * @param <T3>
  * @param <T4>
+ * 
  */
 public final class Union4<T1, T2, T3, T4> {
 	
 	private interface Member<T1, T2, T3, T4> {
-		public <R> R match(
+		public <R> R map(
 				Function<? super T1, ? extends R> f1,
 				Function<? super T2, ? extends R> f2,
 				Function<? super T3, ? extends R> f3,
@@ -33,10 +34,10 @@ public final class Union4<T1, T2, T3, T4> {
 				Consumer<? super T4> c4);
 		public Object getValue();
 	}
-
+	
 	private final Member<T1, T2, T3, T4> member;
 
-
+	
 	/**
 	 * 指定されたT1型の要素を持つ新しいUnion4を返す．
 	 * 
@@ -47,7 +48,7 @@ public final class Union4<T1, T2, T3, T4> {
 	public static <T1, T2, T3, T4> Union4<T1, T2, T3, T4> of1(T1 value) {
 		return new Union4<T1, T2, T3, T4>(new Member1<>(Objects.requireNonNull(value)));
 	}
-
+	
 	/**
 	 * 指定されたT1型の要素を持つ新しいUnion4を返す．
 	 * 
@@ -60,7 +61,7 @@ public final class Union4<T1, T2, T3, T4> {
 	public static <T1, T2, T3, T4> Union4<T1, T2, T3, T4> _1(T1 value) {
 		return of1(value);
 	}
-
+	
 	/**
 	 * 指定されたT2型の要素を持つ新しいUnion4を返す．
 	 * 
@@ -71,7 +72,7 @@ public final class Union4<T1, T2, T3, T4> {
 	public static <T1, T2, T3, T4> Union4<T1, T2, T3, T4> of2(T2 value) {
 		return new Union4<T1, T2, T3, T4>(new Member2<>(Objects.requireNonNull(value)));
 	}
-
+	
 	/**
 	 * 指定されたT2型の要素を持つ新しいUnion4を返す．
 	 * 
@@ -84,7 +85,7 @@ public final class Union4<T1, T2, T3, T4> {
 	public static <T1, T2, T3, T4> Union4<T1, T2, T3, T4> _2(T2 value) {
 		return of2(value);
 	}
-
+	
 	/**
 	 * 指定されたT3型の要素を持つ新しいUnion4を返す．
 	 * 
@@ -95,7 +96,7 @@ public final class Union4<T1, T2, T3, T4> {
 	public static <T1, T2, T3, T4> Union4<T1, T2, T3, T4> of3(T3 value) {
 		return new Union4<T1, T2, T3, T4>(new Member3<>(Objects.requireNonNull(value)));
 	}
-
+	
 	/**
 	 * 指定されたT3型の要素を持つ新しいUnion4を返す．
 	 * 
@@ -108,7 +109,7 @@ public final class Union4<T1, T2, T3, T4> {
 	public static <T1, T2, T3, T4> Union4<T1, T2, T3, T4> _3(T3 value) {
 		return of3(value);
 	}
-
+	
 	/**
 	 * 指定されたT4型の要素を持つ新しいUnion4を返す．
 	 * 
@@ -119,7 +120,7 @@ public final class Union4<T1, T2, T3, T4> {
 	public static <T1, T2, T3, T4> Union4<T1, T2, T3, T4> of4(T4 value) {
 		return new Union4<T1, T2, T3, T4>(new Member4<>(Objects.requireNonNull(value)));
 	}
-
+	
 	/**
 	 * 指定されたT4型の要素を持つ新しいUnion4を返す．
 	 * 
@@ -132,7 +133,7 @@ public final class Union4<T1, T2, T3, T4> {
 	public static <T1, T2, T3, T4> Union4<T1, T2, T3, T4> _4(T4 value) {
 		return of4(value);
 	}
-
+	
 	/**
 	 * 要素に関数を適用し，結果を返す．
 	 * 与えたそれぞれの関数のうち，要素の型に対する関数が適用され，結果が返る．
@@ -149,28 +150,7 @@ public final class Union4<T1, T2, T3, T4> {
 				Function<? super T2, ? extends R> f2,
 				Function<? super T3, ? extends R> f3,
 				Function<? super T4, ? extends R> f4) {
-		return member.match(f1, f2, f3, f4);
-	}
-
-	/**
-	 * 要素に関数を適用し，結果を返す．
-	 * 与えたそれぞれの関数のうち，要素の型に対する関数が適用され，結果が返る．
-	 * 与える関数の戻り値の型は一致していなければならない．
-	 * 
-	 * @deprecated {@link Union4#map(Function, Function, Function, Function) Union4#map(Function&lt? super T1, ? extends R&gt;1, Function&lt? super T2, ? extends R&gt;2, Function&lt? super T3, ? extends R&gt;3, Function&lt? super T4, ? extends R&gt;4 }に置き換えられた
-	 * 
-	 * @param f1 T1に適用する関数
-	 * @param f2 T2に適用する関数
-	 * @param f3 T3に適用する関数
-	 * @param f4 T4に適用する関数
-	 * @return 関数の戻り値
-	*/
-	public <R> R match(
-				Function<? super T1, ? extends R> f1,
-				Function<? super T2, ? extends R> f2,
-				Function<? super T3, ? extends R> f3,
-				Function<? super T4, ? extends R> f4) {
-		return map(f1, f2, f3, f4);
+		return member.map(f1, f2, f3, f4);
 	}
 	
 	/**
@@ -230,7 +210,7 @@ public final class Union4<T1, T2, T3, T4> {
 	public Optional<T4> get4() {
 		return Optional.ofNullable(map(t1 -> null, t2 -> null, t3 -> null, t4 -> t4));
 	}
-
+	
 	/**
 	 * 要素の文字列表現を返す.
 	 * 
@@ -284,7 +264,7 @@ public final class Union4<T1, T2, T3, T4> {
 		}
 		
 		@Override
-		public <R> R match(
+		public <R> R map(
 				Function<? super T1, ? extends R> f1,
 				Function<? super T2, ? extends R> f2,
 				Function<? super T3, ? extends R> f3,
@@ -316,7 +296,7 @@ public final class Union4<T1, T2, T3, T4> {
 		}
 		
 		@Override
-		public <R> R match(
+		public <R> R map(
 				Function<? super T1, ? extends R> f1,
 				Function<? super T2, ? extends R> f2,
 				Function<? super T3, ? extends R> f3,
@@ -348,7 +328,7 @@ public final class Union4<T1, T2, T3, T4> {
 		}
 		
 		@Override
-		public <R> R match(
+		public <R> R map(
 				Function<? super T1, ? extends R> f1,
 				Function<? super T2, ? extends R> f2,
 				Function<? super T3, ? extends R> f3,
@@ -380,7 +360,7 @@ public final class Union4<T1, T2, T3, T4> {
 		}
 		
 		@Override
-		public <R> R match(
+		public <R> R map(
 				Function<? super T1, ? extends R> f1,
 				Function<? super T2, ? extends R> f2,
 				Function<? super T3, ? extends R> f3,

@@ -19,7 +19,7 @@
 |public final class Union{{size}}<{{#items}}T{{item}}{{#comma}}, {{/comma}}{{/items}}> {
 |	
 |	private interface Member<{{#items}}T{{item}}{{#comma}}, {{/comma}}{{/items}}> {
-|		public <R> R match(
+|		public <R> R map(
 |				{{#items}}Function<? super T{{item}}, ? extends R> f{{item}}{{#comma}},
 |				{{/comma}}{{/items}});
 |		public void match(
@@ -66,23 +66,7 @@
 |	public <R> R map(
 |				{{#items}}Function<? super T{{item}}, ? extends R> f{{item}}{{#comma}},
 |				{{/comma}}{{/items}}) {
-|		return member.match({{#items}}f{{item}}{{#comma}}, {{/comma}}{{/items}});
-|	}
-|	
-|	/**
-|	 * 要素に関数を適用し，結果を返す．
-|	 * 与えたそれぞれの関数のうち，要素の型に対する関数が適用され，結果が返る．
-|	 * 与える関数の戻り値の型は一致していなければならない．
-|	 * 
-|	 * @deprecated {@link Union{{size}}#map({{#items}}Function{{#comma}}, {{/comma}}{{/items}}) Union{{size}}#map({{#items}}Function&lt? super T{{item}}, ? extends R&gt;{{item}}{{#comma}}, {{/comma}}{{/items}} }に置き換えられた
-|	 * 
-|{{#items}}	 * @param f{{item}} T{{item}}に適用する関数
-|{{/items}}	 * @return 関数の戻り値
-|	*/
-|	public <R> R match(
-|				{{#items}}Function<? super T{{item}}, ? extends R> f{{item}}{{#comma}},
-|				{{/comma}}{{/items}}) {
-|		return map({{#items}}f{{item}}{{#comma}}, {{/comma}}{{/items}});
+|		return member.map({{#items}}f{{item}}{{#comma}}, {{/comma}}{{/items}});
 |	}
 |	
 |	/**
@@ -162,7 +146,7 @@
 |		}
 |		
 |		@Override
-|		public <R> R match(
+|		public <R> R map(
 |				{{#items}}Function<? super T{{item}}, ? extends R> f{{item}}{{#comma}},
 |				{{/comma}}{{/items}}) {
 |			return f{{item}}.apply(value);

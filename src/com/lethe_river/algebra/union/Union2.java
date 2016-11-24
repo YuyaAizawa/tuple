@@ -15,11 +15,12 @@ import java.util.function.Function;
  *
  * @param <T1>
  * @param <T2>
+ * 
  */
 public final class Union2<T1, T2> {
 	
 	private interface Member<T1, T2> {
-		public <R> R match(
+		public <R> R map(
 				Function<? super T1, ? extends R> f1,
 				Function<? super T2, ? extends R> f2);
 		public void match(
@@ -27,10 +28,10 @@ public final class Union2<T1, T2> {
 				Consumer<? super T2> c2);
 		public Object getValue();
 	}
-
+	
 	private final Member<T1, T2> member;
 
-
+	
 	/**
 	 * 指定されたT1型の要素を持つ新しいUnion2を返す．
 	 * 
@@ -41,7 +42,7 @@ public final class Union2<T1, T2> {
 	public static <T1, T2> Union2<T1, T2> of1(T1 value) {
 		return new Union2<T1, T2>(new Member1<>(Objects.requireNonNull(value)));
 	}
-
+	
 	/**
 	 * 指定されたT1型の要素を持つ新しいUnion2を返す．
 	 * 
@@ -54,7 +55,7 @@ public final class Union2<T1, T2> {
 	public static <T1, T2> Union2<T1, T2> _1(T1 value) {
 		return of1(value);
 	}
-
+	
 	/**
 	 * 指定されたT2型の要素を持つ新しいUnion2を返す．
 	 * 
@@ -65,7 +66,7 @@ public final class Union2<T1, T2> {
 	public static <T1, T2> Union2<T1, T2> of2(T2 value) {
 		return new Union2<T1, T2>(new Member2<>(Objects.requireNonNull(value)));
 	}
-
+	
 	/**
 	 * 指定されたT2型の要素を持つ新しいUnion2を返す．
 	 * 
@@ -78,7 +79,7 @@ public final class Union2<T1, T2> {
 	public static <T1, T2> Union2<T1, T2> _2(T2 value) {
 		return of2(value);
 	}
-
+	
 	/**
 	 * 要素に関数を適用し，結果を返す．
 	 * 与えたそれぞれの関数のうち，要素の型に対する関数が適用され，結果が返る．
@@ -91,24 +92,7 @@ public final class Union2<T1, T2> {
 	public <R> R map(
 				Function<? super T1, ? extends R> f1,
 				Function<? super T2, ? extends R> f2) {
-		return member.match(f1, f2);
-	}
-
-	/**
-	 * 要素に関数を適用し，結果を返す．
-	 * 与えたそれぞれの関数のうち，要素の型に対する関数が適用され，結果が返る．
-	 * 与える関数の戻り値の型は一致していなければならない．
-	 * 
-	 * @deprecated {@link Union2#map(Function, Function) Union2#map(Function&lt? super T1, ? extends R&gt;1, Function&lt? super T2, ? extends R&gt;2 }に置き換えられた
-	 * 
-	 * @param f1 T1に適用する関数
-	 * @param f2 T2に適用する関数
-	 * @return 関数の戻り値
-	*/
-	public <R> R match(
-				Function<? super T1, ? extends R> f1,
-				Function<? super T2, ? extends R> f2) {
-		return map(f1, f2);
+		return member.map(f1, f2);
 	}
 	
 	/**
@@ -144,7 +128,7 @@ public final class Union2<T1, T2> {
 	public Optional<T2> get2() {
 		return Optional.ofNullable(map(t1 -> null, t2 -> t2));
 	}
-
+	
 	/**
 	 * 要素の文字列表現を返す.
 	 * 
@@ -198,7 +182,7 @@ public final class Union2<T1, T2> {
 		}
 		
 		@Override
-		public <R> R match(
+		public <R> R map(
 				Function<? super T1, ? extends R> f1,
 				Function<? super T2, ? extends R> f2) {
 			return f1.apply(value);
@@ -226,7 +210,7 @@ public final class Union2<T1, T2> {
 		}
 		
 		@Override
-		public <R> R match(
+		public <R> R map(
 				Function<? super T1, ? extends R> f1,
 				Function<? super T2, ? extends R> f2) {
 			return f2.apply(value);
