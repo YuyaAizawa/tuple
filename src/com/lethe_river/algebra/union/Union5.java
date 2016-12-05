@@ -187,11 +187,11 @@ public class Union5<T1, T2, T3, T4, T5> {
 	 * 要素に対してオペレーションを実行する．
 	 * 与えたそれぞれのオペレーションのうち，要素の型に対するオペレーションが実行される．
 	 * 
-	 * @param f1 T1に対するオペレーション
-	 * @param f2 T2に対するオペレーション
-	 * @param f3 T3に対するオペレーション
-	 * @param f4 T4に対するオペレーション
-	 * @param f5 T5に対するオペレーション
+	 * @param c1 T1に対するオペレーション
+	 * @param c2 T2に対するオペレーション
+	 * @param c3 T3に対するオペレーション
+	 * @param c4 T4に対するオペレーション
+	 * @param c5 T5に対するオペレーション
 	 */
 	public final void matchDo(
 				Consumer<? super T1> c1,
@@ -250,6 +250,7 @@ public class Union5<T1, T2, T3, T4, T5> {
 	 * @return T5型の要素を表すOptional,または空のOptional
 	 */
 	public Optional<T5> get5() {
+		// TODO 全部nullになっているので手動で直す
 		return Optional.ofNullable(match(t1 -> null, t2 -> null, t3 -> null, t4 -> null, t5 -> t5));
 	}
 	

@@ -100,8 +100,8 @@ public class Union2<T1, T2> {
 	 * 要素に対してオペレーションを実行する．
 	 * 与えたそれぞれのオペレーションのうち，要素の型に対するオペレーションが実行される．
 	 * 
-	 * @param f1 T1に対するオペレーション
-	 * @param f2 T2に対するオペレーション
+	 * @param c1 T1に対するオペレーション
+	 * @param c2 T2に対するオペレーション
 	 */
 	public final void matchDo(
 				Consumer<? super T1> c1,

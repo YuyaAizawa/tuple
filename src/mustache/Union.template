@@ -74,7 +74,7 @@
 |	 * 要素に対してオペレーションを実行する．
 |	 * 与えたそれぞれのオペレーションのうち，要素の型に対するオペレーションが実行される．
 |	 * 
-|{{#items}}	 * @param f{{item}} T{{item}}に対するオペレーション
+|{{#items}}	 * @param c{{item}} T{{item}}に対するオペレーション
 |{{/items}}	 */
 |	public final void matchDo(
 |				{{#items}}Consumer<? super T{{item}}> c{{item}}{{#comma}},
